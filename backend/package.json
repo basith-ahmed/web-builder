@@ -14,6 +14,7 @@
   "packageManager": "pnpm@10.6.2",
   "dependencies": {
     "@google/genai": "^0.15.0",
+    "@types/express": "^5.0.2",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "typescript": "^5.8.3"

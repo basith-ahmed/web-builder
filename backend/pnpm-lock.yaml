@@ -11,9 +11,15 @@ importers:
       '@google/genai':
         specifier: ^0.15.0
         version: 0.15.0(@modelcontextprotocol/sdk@1.11.4)
+      '@types/cors':
+        specifier: ^2.8.18
+        version: 2.8.18
       '@types/express':
         specifier: ^5.0.2
         version: 5.0.2
+      cors:
+        specifier: ^2.8.5
+        version: 2.8.5
       dotenv:
         specifier: ^16.5.0
         version: 16.5.0
@@ -45,6 +51,9 @@ packages:
 
   '@types/connect@3.4.38':
     resolution: {integrity: sha512-K6uROf1LD88uDQqJCktA4yzL1YYAK6NgfsI0v/mTgyPKWsX1CnJ0XPSDhViejru1GcRkLWb8RlzFYJRqGUbaug==}
+
+  '@types/cors@2.8.18':
+    resolution: {integrity: sha512-nX3d0sxJW41CqQvfOzVG1NCTXfFDrDWIghCZncpHeWlVFd81zxB/DLhg7avFg6eHLCRX7ckBmoIIcqa++upvJA==}
 
   '@types/express-serve-static-core@5.0.6':
     resolution: {integrity: sha512-3xhRnjJPkULekpSzgtoNYYcTWgEZkp4myc+Saevii5JPnHNvHMRlBSHDbs7Bh1iPPoVTERHEZXyhyLbMEsExsA==}
@@ -544,6 +553,10 @@ snapshots:
       '@types/node': 22.15.19
 
   '@types/connect@3.4.38':
+    dependencies:
+      '@types/node': 22.15.19
+
+  '@types/cors@2.8.18':
     dependencies:
       '@types/node': 22.15.19
 

@@ -1,6 +1,7 @@
 import { config } from "dotenv";
 import { GoogleGenAI } from "@google/genai";
 import express from "express";
+import cors from "cors";
 import { BASE_PROMPT, getSystemPrompt } from "./lib/prompt.js";
 import { NODE, REACT } from "./utils/contants.js";
 
@@ -9,6 +10,7 @@ config();
 const app = express();
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
+app.use(cors());
 app.use(express.json());
 
 app.post("/template", async (req, res) => {

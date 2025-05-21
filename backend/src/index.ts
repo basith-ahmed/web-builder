@@ -30,19 +30,21 @@ app.post("/template", async (req, res) => {
 
   if (type === "react") {
     res.json({
-      prompts: [
+      base: [
         BASE_PROMPT,
         `Project Files:\n\nThe following is a list of all project files and their complete contents that are currently visible and accessible to you. ${REACT} \nHere is a list of files that exist on the file system but are not being shown to you:\n\n  - .gitignore\n  - package-lock.json\n.`,
       ],
+      defaultFiles: [REACT],
     });
     return;
   }
 
   if (type === "node") {
     res.json({
-      prompts: [
+      base: [
         `Project Files:\n\nThe following is a list of all project files and their complete contents that are currently visible and accessible to you. ${NODE} \nHere is a list of files that exist on the file system but are not being shown to you:\n\n  - .gitignore\n  - package-lock.json\n.`,
       ],
+      defaultFiles: [NODE],
     });
     return;
   }
@@ -53,14 +55,14 @@ app.post("/template", async (req, res) => {
 app.post("/chat", async (req, res) => {
   const messages = req.body.messages;
 
-  // messages = [{ parts: [{text: ""}]  }], role: "user/model" }]
+  // messages = [{ parts: [{text: ""}]  , role: "user/model" }]
 
   const response = await ai.models.generateContentStream({
     model: "gemini-2.0-flash",
     contents: messages,
     config: {
       systemInstruction: getSystemPrompt(),
-      maxOutputTokens: 500,
+      maxOutputTokens: 10,
       temperature: 0.1,
     },
   });

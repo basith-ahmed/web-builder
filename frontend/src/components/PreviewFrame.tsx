@@ -23,7 +23,6 @@ export function PreviewFrame({ files, webContainer }: PreviewFrameProps) {
 
     // Wait for `server-ready` event
     webContainer.on('server-ready', (port, url) => {
-      // ...
       console.log(url)
       console.log(port)
       setUrl(url);

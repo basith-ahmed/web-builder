@@ -17,7 +17,7 @@ export default function Builder() {
   const searchParams = useSearchParams();
   const prompt = searchParams.get("prompt");
 
-  const [userPrompt, setPrompt] = useState("");
+  const [userPrompt, setUserPrompt] = useState("");
   const [llmMessages, setLlmMessages] = useState<
     { role: "user" | "model"; parts: { text: string }[] }[]
   >([]);
@@ -110,10 +110,11 @@ export default function Builder() {
 
       const processFile = (file: FileItem, isRootFolder: boolean) => {
         if (file.type === "folder") {
-          /* 
-          *  Create a folkder entry
-          *  This creates a nested structure for folders
-          */ 
+          /*
+           *  Create a folkder entry
+           *  This creates a nested structure for folders
+           *  The structure is specifically built for webcontainers
+           */
           mountStructure[file.name] = {
             directory: file.children
               ? Object.fromEntries(
@@ -125,6 +126,7 @@ export default function Builder() {
               : {},
           };
         } else if (file.type === "file") {
+          // Create a file entry
           if (isRootFolder) {
             mountStructure[file.name] = {
               file: {
@@ -132,7 +134,6 @@ export default function Builder() {
               },
             };
           } else {
-            // Create a file entry
             return {
               file: {
                 contents: file.content || "",
@@ -156,7 +157,7 @@ export default function Builder() {
     webcontainer?.mount(mountStructure);
   }, [files, webcontainer]);
 
-  async function init() {
+  async function fetchData() {
     const response = await axios.post(`${BACKEND_URL}/template`, {
       prompt: prompt!.trim(),
     });
@@ -178,6 +179,8 @@ export default function Builder() {
         parts: [{ text: content }],
       })),
     });
+
+    console.log({ response: stepsResponse.data.response });
 
     setLoading(false);
 
@@ -203,7 +206,7 @@ export default function Builder() {
   }
 
   useEffect(() => {
-    init();
+    fetchData();
   }, []);
 
   return (
@@ -224,13 +227,15 @@ export default function Builder() {
           <div className="flex absolute bottom-0 left-0 right-0 m-4 backdrop-blur-lg ring-1 ring-white/20 rounded-lg overflow-hidden">
             <textarea
               value={userPrompt}
-              onChange={(e) => setPrompt(e.target.value)}
+              onChange={(e) => setUserPrompt(e.target.value)}
               placeholder="Add dark mode to it."
               className="p-2 w-full h-14 resize-none text-gray-100 focus:ring-0 focus:outline-none"
             />
 
             <button
               onClick={async () => {
+                if (!userPrompt) return;
+                setUserPrompt("");
                 const newMessage = {
                   role: "user" as "user",
                   parts: [{ text: userPrompt }],

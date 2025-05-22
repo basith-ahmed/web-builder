@@ -242,13 +242,11 @@ export default function Builder() {
   };
 
   return (
-    <div className="h-screen flex flex-col bg-black">
-      <header className="flex justify-between items-center  border-b border-white/20 px-6 py-3">
+    <div className="h-screen flex flex-col  bg-[#0f0f10]">
+      <header className="flex justify-between items-center border-white/10 px-4 py-1.5">
         {/* <div className="w-[2px] rounded-full bg-white/20 mx-2"></div> */}
-        <p className="text-white mt-1 truncate max-w-96 text-xl">
-          <span className="mr-1 font-semibold">
-            Project:
-          </span>
+        <p className="mt-1 truncate max-w-96 text-md">
+          <span className="mr-1 font-semibold">Builder / Project /</span>
           {prompt}
         </p>
         <h1 className="flex items-center text-xl font-semibold text-gray-100">
@@ -259,49 +257,67 @@ export default function Builder() {
         </h1>
       </header>
 
-      <div className="flex-1 grid grid-cols-4 overflow-hidden">
-        <div className="col-span-1 overflow-auto relative border-r border-white/20">
-          <StepsList
-            steps={steps}
-            currentStep={currentStep}
-            onStepClick={setCurrentStep}
-          />
-          <div className="flex absolute bottom-0 left-0 right-0 m-4 backdrop-blur-lg ring-1 ring-white/20 rounded-lg overflow-hidden">
-            <input
-              type="text"
+      <div className="flex-1 grid grid-cols-3 overflow-hidden">
+        <div className="col-span-1 overflow-auto flex flex-col h-full pb-2">
+          <div className="flex-1 overflow-auto relative">
+            <StepsList
+              steps={steps}
+              currentStep={currentStep}
+              onStepClick={setCurrentStep}
+            />
+          </div>
+          <div className="sticky bottom-0 flex flex-col justify-between mx-4 mt-[1px] bg-[#141414] backdrop-blur-xl ring-1 ring-white/20 rounded-2xl overflow-hidden">
+            <textarea
+              rows={1}
               value={userPrompt}
               onChange={(e) => setUserPrompt(e.target.value)}
-              placeholder="Add dark mode to it."
-              className="p-2 w-full h-12 text-gray-100 focus:ring-0 focus:outline-none"
+              placeholder="Make it dark themed..."
+              className="resize-none py-3 px-4 w-full text-gray-100 bg-transparent focus:ring-0 focus:outline-none"
             />
-
             <button
               onClick={handleSend}
-              className="bg-blue-500 m-1 px-4 rounded-sm hover:bg-blue-600 transition-all duration-300"
+              className={`m-2 p-1 w-24 ml-auto rounded-lg transition-all duration-300 border border-white/20 ${
+                userPrompt
+                  ? "bg-white hover:bg-white/90 text-black cursor-pointer"
+                  : "bg-[#1f1f22]"
+              }`}
             >
               Send
             </button>
           </div>
+          <div className="text-center text-[12px] mt-1.5 opacity-55">
+            View WebBuilder on{" "}
+            <a
+              href="https://github.com/basith-ahmed/web-builder"
+              className="text-white font-semibold hover:underline"
+            >
+              GitHub
+            </a>
+            .
+          </div>
         </div>
 
-        <div className="col-span-3 grid grid-cols-4 overflow-hidden">
-          <div className="col-span-1 overflow-auto border-r border-white/20">
-            <FileExplorer files={files} onFileSelect={setSelectedFile} />
-          </div>
+        <div className="col-span-2 overflow-hidden border border-white/10 rounded-lg m-4 ml-0 mt-0 flex flex-col">
+          <TabView
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+            selectedFile={selectedFile}
+          />
+          <div className="h-full grid grid-cols-4 overflow-hidden border-t border-white/10">
+            <div className="col-span-1 overflow-auto border-r border-white/10">
+              <FileExplorer files={files} onFileSelect={setSelectedFile} />
+            </div>
 
-          <div className="col-span-3 flex flex-col p-4">
-            <TabView
-              activeTab={activeTab}
-              onTabChange={setActiveTab}
-              selectedFile={selectedFile}
-            />
-            <div className="flex-1 overflow-hidden rounded-lg">
+            <div className="col-span-3 flex-1">
               {activeTab === "code" ? (
                 <CodeEditor file={selectedFile} />
               ) : (
                 <PreviewFrame webContainer={webcontainer} files={files} />
               )}
             </div>
+          </div>
+          <div className="border-t border-white/10 p-2">
+            Terminal
           </div>
         </div>
       </div>

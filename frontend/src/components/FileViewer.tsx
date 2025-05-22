@@ -8,7 +8,7 @@ export function FileViewer({ file, onClose }: FileViewerProps) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-black rounded-lg w-full max-w-3xl max-h-[80vh] overflow-hidden">
-        <div className="flex items-center justify-between p-4 border-b border-white/20">
+        <div className="flex items-center justify-between p-4 border-b border-white/10">
           <h3 className="text-lg font-medium text-gray-100">{file.path}</h3>
           <button
             onClick={onClose}

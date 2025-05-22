@@ -10,19 +10,23 @@ interface StepsListProps {
 
 export function StepsList({ steps, currentStep, onStepClick }: StepsListProps) {
   return (
-    <div className="rounded-lg p-4 h-full overflow-auto ">
-      <div className="pointer-events-none absolute top-0 left-0 right-0 h-16 z-10 bg-gradient-to-b from-black/80 to-transparent" />
-      <h2 className="text-lg font-semibold mb-4 text-gray-100">Build Steps</h2>
-      <div className="space-y-4 mb-20">
+    <div className="rounded-lg p-4 h-full overflow-auto mx-8">
+      <div className="absolute top-0 left-0 right-0 h-16 z-10 bg-gradient-to-b from-[#0f0f10] to-transparent pointer-events-none" />
+      <h2 className="text-lg font-semibold mb-4 text-gray-100 mt-10">
+        Build Steps
+      </h2>
+      <div className="space-y-4 mb-10">
         {steps.map((step, index) => (
           <div
             key={index}
-            className={`flex items-center p-2 rounded-lg cursor-pointer transition-colors ${
-              currentStep === step.id
-                ? "bg-white/30 border border-white/20"
-                : "hover:bg-white/20"
-            }`}
-            onClick={() => onStepClick(step.id)}
+            className={`flex items-center p-2 rounded-lg cursor-pointer transition-colors`}
+              
+            //   ${
+            //   currentStep === step.id
+            //     ? "bg-white/10 border border-white/10"
+            //     : "hover:bg-white/5"
+            // }`}
+            // onClick={() => onStepClick(step.id)}
           >
             <div className="flex items-center gap-2">
               {step.status === "completed" ? (
@@ -38,6 +42,7 @@ export function StepsList({ steps, currentStep, onStepClick }: StepsListProps) {
           </div>
         ))}
       </div>
+      <div className="absolute bottom-0 left-0 right-0 h-10 z-10 bg-gradient-to-t from-[#0f0f10] to-transparent pointer-events-none" />
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { Code2, Eye, File } from "lucide-react";
+import { Code2, Eye, File, ScreenShare } from "lucide-react";
 import { FileItem } from "@/types";
 
 interface TabViewProps {
@@ -14,20 +14,14 @@ export function TabView({
   selectedFile,
 }: TabViewProps) {
   return (
-    <div className="flex items-center justify-between mb-4">
-      {selectedFile && (
-        <span className="text-md text-white flex items-center space-x-1 px-2">
-          {/* <File size={14} /> */}
-          <p>{selectedFile.name}</p>
-        </span>
-      )}
-      <div className="flex h-8 space-x-1 p-1 border border-white/20 w-fit rounded-lg">
+    <div className="flex items-center justify-between p-2">
+      <div className="flex h-8 space-x-2 w-fit">
         <button
           onClick={() => onTabChange("code")}
-          className={`flex items-center gap-2 p-2 rounded-sm transition-colors ${
+          className={`flex items-center gap-2 p-2 px-3 rounded-md transition-colors ${
             activeTab === "code"
-              ? "bg-white/30 text-gray-100"
-              : "text-gray-400 hover:text-gray-200 hover:bg-white/20"
+              ? "bg-white/10 text-gray-100"
+              : "text-gray-400 hover:text-gray-200 hover:bg-white/10"
           }`}
         >
           <Code2 className="w-4 h-4" />
@@ -35,16 +29,23 @@ export function TabView({
         </button>
         <button
           onClick={() => onTabChange("preview")}
-          className={`flex items-center gap-2 p-2 rounded-sm transition-colors ${
+          className={`flex items-center gap-2 p-2 px-3 rounded-md transition-colors ${
             activeTab === "preview"
-              ? "bg-white/30 text-gray-100"
-              : "text-gray-400 hover:text-gray-200 hover:bg-white/20"
+              ? "bg-white/10 text-gray-100"
+              : "text-gray-400 hover:text-gray-200 hover:bg-white/10"
           }`}
         >
-          <Eye className="w-4 h-4" />
+          <ScreenShare className="w-4 h-4" />
           Preview
         </button>
       </div>
+      {selectedFile && (
+        <span className="text-md text-white flex items-center space-x-1 pr-4">
+          {/* <File size={14} /> */}
+          <Eye className="w-4 h-4" />
+          <p>{selectedFile.name}</p>
+        </span>
+      )}
     </div>
   );
 }

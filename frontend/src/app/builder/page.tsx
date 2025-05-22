@@ -209,6 +209,38 @@ export default function Builder() {
     fetchData();
   }, []);
 
+  const handleSend = async () => {
+    if (!userPrompt) return;
+    setUserPrompt("");
+    const newMessage = {
+      role: "user" as "user",
+      parts: [{ text: userPrompt }],
+    };
+
+    setLoading(true);
+    const stepsResponse = await axios.post(`${BACKEND_URL}/chat`, {
+      messages: [...llmMessages, newMessage],
+    });
+    setLoading(false);
+
+    setLlmMessages((x) => [...x, newMessage]);
+    setLlmMessages((x) => [
+      ...x,
+      {
+        role: "model",
+        parts: [{ text: stepsResponse.data.response }],
+      },
+    ]);
+
+    setSteps((s) => [
+      ...s,
+      ...parseXml(stepsResponse.data.response).map((x) => ({
+        ...x,
+        status: "pending" as "pending",
+      })),
+    ]);
+  };
+
   return (
     <div className="h-screen flex flex-col bg-black">
       <header className="flex border-b border-gray-700 px-6 py-4">
@@ -233,38 +265,8 @@ export default function Builder() {
             />
 
             <button
-              onClick={async () => {
-                if (!userPrompt) return;
-                setUserPrompt("");
-                const newMessage = {
-                  role: "user" as "user",
-                  parts: [{ text: userPrompt }],
-                };
-
-                setLoading(true);
-                const stepsResponse = await axios.post(`${BACKEND_URL}/chat`, {
-                  messages: [...llmMessages, newMessage],
-                });
-                setLoading(false);
-
-                setLlmMessages((x) => [...x, newMessage]);
-                setLlmMessages((x) => [
-                  ...x,
-                  {
-                    role: "model",
-                    parts: [{ text: stepsResponse.data.response }],
-                  },
-                ]);
-
-                setSteps((s) => [
-                  ...s,
-                  ...parseXml(stepsResponse.data.response).map((x) => ({
-                    ...x,
-                    status: "pending" as "pending",
-                  })),
-                ]);
-              }}
-              className="bg-white/50 m-1 px-4 rounded-sm"
+              onClick={handleSend}
+              className="bg-blue-500/50 m-1 px-4 rounded-sm"
             >
               Send
             </button>

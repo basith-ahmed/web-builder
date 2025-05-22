@@ -57,19 +57,21 @@ app.post("/chat", async (req, res) => {
 
   // messages = [{ parts: [{text: ""}]  , role: "user/model" }]
 
-  const response = await ai.models.generateContentStream({
+  const response = await ai.models.generateContent({
     model: "gemini-2.0-flash",
     contents: messages,
     config: {
       systemInstruction: getSystemPrompt(),
-      maxOutputTokens: 10,
+      maxOutputTokens: 10000,
       temperature: 0.1,
     },
   });
 
-  for await (const chunk of response) {
-    console.log(chunk.text);
-  }
+  // for await (const chunk of response) {
+  //   console.log(chunk.text);
+  // }
+
+  res.json({ response: response.text });
 });
 
 app.listen(8000, () => {

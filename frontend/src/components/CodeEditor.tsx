@@ -18,15 +18,19 @@ export function CodeEditor({ file }: CodeEditorProps) {
   return (
     <Editor
       height="100%"
-      defaultLanguage="typescript"
+      defaultLanguage="javascript"
       theme="vs-dark"
-      value={file.content || ''}
+      value={file.content || ""}
       options={{
         readOnly: true,
         minimap: { enabled: false },
         fontSize: 14,
-        wordWrap: 'on',
+        wordWrap: "on",
         scrollBeyondLastLine: false,
+        padding: {
+          top: 20,
+          bottom: 50,
+        },
       }}
     />
   );

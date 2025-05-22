@@ -16,10 +16,10 @@ export function StepsList({ steps, currentStep, onStepClick }: StepsListProps) {
         {steps.map((step, index) => (
           <div
             key={index}
-            className={`p-1 rounded-lg cursor-pointer transition-colors ${
+            className={`flex items-center p-2 rounded-lg cursor-pointer transition-colors ${
               currentStep === step.id
-                ? 'bg-gray-800 border border-gray-700'
-                : 'hover:bg-gray-800'
+                ? 'bg-white/30 border border-white/20'
+                : 'hover:bg-white/20'
             }`}
             onClick={() => onStepClick(step.id)}
           >

@@ -3,13 +3,17 @@ import React, { useEffect, useState } from "react";
 
 interface PreviewFrameProps {
   files: any[];
-  webContainer: WebContainer;
+  webContainer: WebContainer | null;
 }
 
 export function PreviewFrame({ files, webContainer }: PreviewFrameProps) {
   const [url, setUrl] = useState("");
 
   async function main() {
+    if (!webContainer) {
+      console.error("WebContainer is not initialized");
+      return;
+    }
     const installProcess = await webContainer.spawn("npm", ["install"]);
 
     installProcess.output.pipeTo(
@@ -30,10 +34,10 @@ export function PreviewFrame({ files, webContainer }: PreviewFrameProps) {
   }
 
   useEffect(() => {
-    main();
+    if (webContainer) main();
   }, []);
   return (
-    <div className="h-full flex items-center justify-center text-gray-400">
+    <div className="h-full rounded-lg overflow-hidden flex items-center justify-center text-gray-400">
       {!url && (
         <div className="text-center">
           <p className="mb-2">Loading...</p>

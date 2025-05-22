@@ -14,7 +14,7 @@ interface FileNodeProps {
 }
 
 function FileNode({ item, depth, onFileClick }: FileNodeProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
 
   const handleClick = () => {
     if (item.type === 'folder') {
@@ -27,7 +27,7 @@ function FileNode({ item, depth, onFileClick }: FileNodeProps) {
   return (
     <div className="select-none">
       <div
-        className="flex items-center gap-2 p-2 hover:bg-gray-800 rounded-md cursor-pointer"
+        className="flex items-center p-1 hover:bg-white/20 rounded-md cursor-pointer space-x-2"
         style={{ paddingLeft: `${depth * 1.5}rem` }}
         onClick={handleClick}
       >
@@ -65,13 +65,13 @@ function FileNode({ item, depth, onFileClick }: FileNodeProps) {
 
 export function FileExplorer({ files, onFileSelect }: FileExplorerProps) {
   return (
-    <div className="bg-gray-900 rounded-lg shadow-lg p-4 h-full overflow-auto">
+    <div className="rounded-lg p-4 h-full overflow-auto">
       <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-gray-100">
         <FolderTree className="w-5 h-5" />
         File Explorer
       </h2>
       <div className="space-y-1">
-        {files.map((file, index) => (
+        {files.slice().reverse().map((file, index) => (
           <FileNode
             key={`${file.path}-${index}`}
             item={file}

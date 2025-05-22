@@ -14,7 +14,13 @@ export function TabView({
   selectedFile,
 }: TabViewProps) {
   return (
-    <div className="flex items-center justify-between mb-2">
+    <div className="flex items-center justify-between mb-4">
+      {selectedFile && (
+        <span className="text-md text-white flex items-center space-x-1 px-2">
+          {/* <File size={14} /> */}
+          <p>{selectedFile.name}</p>
+        </span>
+      )}
       <div className="flex h-8 space-x-1 p-1 border border-white/20 w-fit rounded-lg">
         <button
           onClick={() => onTabChange("code")}
@@ -39,12 +45,6 @@ export function TabView({
           Preview
         </button>
       </div>
-
-      {selectedFile && (
-        <span className="text-md text-gray-400 flex items-center space-x-1">
-          <File size={14} /> <p>{selectedFile.name}</p>
-        </span>
-      )}
     </div>
   );
 }

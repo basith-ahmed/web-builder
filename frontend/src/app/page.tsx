@@ -16,37 +16,45 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center p-4">
-      <div className="max-w-2xl w-full">
-        <div className="text-center mb-8">
-          <div className="flex justify-center mb-4">
-            <Wand2 className="w-12 h-12 text-blue-400" />
-          </div>
-          <h1 className="text-4xl font-bold text-gray-100 mb-4">
-            Web Builder AI
+    <div className="h-screen flex flex-col items-center justify-center bg-[#0a0a0a]">
+      <header className="flex w-full justify-between items-center border-white/10 px-4 py-1.5">
+        <p className="mt-1 truncate max-w-96 text-md">
+          <a href="" className="mr-1 font-semibold">Home /</a>
+        </p>
+        <h1 className="flex items-center text-xl font-semibold text-gray-100">
+          WebBuilder
+          <span className="animate-gradient bg-gradient-to-r from-blue-400 via-blue-600 to-blue-400 bg-[length:200%_200%] text-transparent bg-clip-text">
+            .AI
+          </span>
+        </h1>
+      </header>
+      <div className="h-full w-full p-2 pt-0 flex items-center justify-center">
+        <div className="space-y-4 w-full h-full bg-[#0f0f10] border border-white/10 rounded-lg flex flex-col items-center justify-center">
+          <h1 className="font-bold text-4xl text-transparent bg-clip-text bg-gradient-to-b from-white to-white/70">
+            What can I help to Build?
           </h1>
-          <p className="text-lg text-gray-300">
-            Describe what you want to build, and we'll help you build it step by
-            step
-          </p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="bg-gray-800 rounded-lg shadow-lg p-6">
+          <form
+            onSubmit={handleSubmit}
+            className="bg-[#141414] w-[40rem] p-2 flex flex-col justify-between ring-1 ring-white/10 rounded-2xl"
+          >
             <textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              placeholder="Describe the website you want to build..."
-              className="w-full h-32 p-4 bg-gray-900 text-gray-100 border border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none placeholder-gray-500"
+              placeholder="Make a study plan scheduler..."
+              className="resize-none py-3 px-4 w-full text-gray-100 bg-transparent focus:ring-0 focus:outline-none"
             />
             <button
               type="submit"
-              className="w-full mt-4 bg-blue-600 text-gray-100 py-3 px-6 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+              className={`m-2 p-1 w-24 ml-auto rounded-lg transition-all duration-300 border border-white/10 ${
+                prompt
+                  ? "bg-white hover:bg-white/90 text-black cursor-pointer"
+                  : "bg-[#1f1f22] text-white/50"
+              }`}
             >
               Generate
             </button>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   );

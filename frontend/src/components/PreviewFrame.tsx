@@ -1,4 +1,5 @@
 import { WebContainer } from "@webcontainer/api";
+import { LoaderIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
 interface PreviewFrameProps {
@@ -39,7 +40,8 @@ export function PreviewFrame({ files, webContainer }: PreviewFrameProps) {
   return (
     <div className="h-full flex items-center justify-center text-gray-400">
       {!url && (
-        <div className="text-center">
+        <div className="text-center flex flex-col items-center justify-center">
+          <LoaderIcon className="animate-spin w-6 h-6" />
           <p className="mb-2">Loading...</p>
         </div>
       )}

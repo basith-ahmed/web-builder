@@ -246,8 +246,8 @@ export default function Builder() {
       <header className="flex justify-between items-center border-white/10 px-4 py-1.5">
         {/* <div className="w-[2px] rounded-full bg-white/20 mx-2"></div> */}
         <p className="mt-1 truncate max-w-96 text-md">
-          <span className="mr-1 font-semibold">Builder / Project /</span>
-          {prompt}
+          <span className="mr-1 font-semibold">Builder /</span>
+          <span className="text-white/50">{prompt}</span>
         </p>
         <h1 className="flex items-center text-xl font-semibold text-gray-100">
           WebBuilder
@@ -266,17 +266,17 @@ export default function Builder() {
               onStepClick={setCurrentStep}
             />
           </div>
-          <div className="sticky bottom-0 flex flex-col justify-between mx-4 mt-[1px] bg-[#141414] backdrop-blur-xl ring-1 ring-white/20 rounded-2xl overflow-hidden">
+          <div className="sticky bottom-0 flex flex-col justify-between mx-4 mt-[1px] bg-[#141414] backdrop-blur-xl ring-1 ring-white/10 rounded-2xl overflow-hidden">
             <textarea
               rows={1}
               value={userPrompt}
               onChange={(e) => setUserPrompt(e.target.value)}
-              placeholder="Make it dark themed..."
+              placeholder="Add a new feature..."
               className="resize-none py-3 px-4 w-full text-gray-100 bg-transparent focus:ring-0 focus:outline-none"
             />
             <button
               onClick={handleSend}
-              className={`m-2 p-1 w-24 ml-auto rounded-lg transition-all duration-300 border border-white/20 ${
+              className={`m-2 p-1 w-24 ml-auto rounded-lg transition-all duration-300 border border-white/10 ${
                 userPrompt
                   ? "bg-white hover:bg-white/90 text-black cursor-pointer"
                   : "bg-[#1f1f22]"
@@ -316,9 +316,7 @@ export default function Builder() {
               )}
             </div>
           </div>
-          <div className="border-t border-white/10 p-2">
-            Terminal
-          </div>
+          <div className="border-t border-white/10 p-2">Terminal</div>
         </div>
       </div>
     </div>

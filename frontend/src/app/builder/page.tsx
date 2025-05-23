@@ -12,6 +12,7 @@ import { BACKEND_URL } from "@/utils/config";
 import { parseXml } from "@/utils/parser";
 import { useWebContainer } from "@/hooks/useWebContainer";
 import { useSearchParams } from "next/navigation";
+import { Terminal } from "lucide-react";
 
 export default function Builder() {
   const searchParams = useSearchParams();
@@ -302,6 +303,7 @@ export default function Builder() {
             activeTab={activeTab}
             onTabChange={setActiveTab}
             selectedFile={selectedFile}
+            webContainer={webcontainer}
           />
           <div className="h-full grid grid-cols-4 overflow-hidden border-t border-white/10">
             <div className="col-span-1 overflow-auto border-r border-white/10">
@@ -316,7 +318,10 @@ export default function Builder() {
               )}
             </div>
           </div>
-          <div className="border-t border-white/10 p-2">Terminal</div>
+          <div className="border-t border-white/10 p-2 px-4 flex items-center gap-2">
+            <Terminal className="w-4 h-4" />
+            Console
+          </div>
         </div>
       </div>
     </div>

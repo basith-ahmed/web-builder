@@ -1,5 +1,5 @@
 import { WebContainer } from "@webcontainer/api";
-import { LoaderIcon } from "lucide-react";
+import { Link2, LoaderIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
 interface PreviewFrameProps {
@@ -38,14 +38,34 @@ export function PreviewFrame({ files, webContainer }: PreviewFrameProps) {
     if (webContainer) main();
   }, []);
   return (
-    <div className="h-full flex items-center justify-center text-gray-400">
+    <div className="h-full flex flex-col items-center justify-center text-gray-400">
       {!url && (
         <div className="text-center flex flex-col items-center justify-center">
           <LoaderIcon className="animate-spin w-6 h-6" />
           <p className="mb-2">Loading...</p>
         </div>
       )}
-      {url && <iframe width={"100%"} height={"100%"} src={url} />}
+      {url && (
+        <>
+          <div className="w-full p-2">
+            <span className="text-sm text-white flex items-center space-x-1 px-2 py-1 w-full bg-white/10 rounded-md">
+              <Link2 className="w-4 h-4" />
+
+              <p className="flex items-center">
+                :{" "}
+                {webContainer?.path?.replace(
+                  webContainer.path.substring(
+                    1,
+                    "/bin:/usr/bin:/usr/local/bin".length
+                  ),
+                  ""
+                )}
+              </p>
+            </span>
+          </div>
+          <iframe width={"100%"} height={"100%"} src={url} />
+        </>
+      )}
     </div>
   );
 }

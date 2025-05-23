@@ -3,7 +3,9 @@ import { WebContainer } from '@webcontainer/api';
 
 let webcontainerInstance: WebContainer | null = null;
 
+
 export function useWebContainer() {
+  const [terminalLogs, setTerminalLogs] = useState<string[]>([]);
   const [webcontainer, setWebcontainer] = useState<WebContainer | null>(null);
 
   useEffect(() => {
@@ -23,5 +25,5 @@ export function useWebContainer() {
     };
   }, []);
 
-  return webcontainer;
+  return { webcontainer, terminalLogs, setTerminalLogs };
 }

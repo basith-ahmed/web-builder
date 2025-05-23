@@ -1,3 +1,4 @@
+import { useWebContainer } from "@/hooks/useWebContainer";
 import { WebContainer } from "@webcontainer/api";
 import { Link2, LoaderIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
@@ -8,6 +9,8 @@ interface PreviewFrameProps {
 }
 
 export function PreviewFrame({ files, webContainer }: PreviewFrameProps) {
+  
+  const { setTerminalLogs } = useWebContainer();  
   const [url, setUrl] = useState("");
 
   async function main() {
@@ -21,6 +24,7 @@ export function PreviewFrame({ files, webContainer }: PreviewFrameProps) {
       new WritableStream({
         write(data) {
           console.log(data);
+          setTerminalLogs((prev) => [...prev, data]);
         },
       })
     );

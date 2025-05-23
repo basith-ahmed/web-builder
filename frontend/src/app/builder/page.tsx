@@ -12,7 +12,7 @@ import { BACKEND_URL } from "@/utils/config";
 import { parseXml } from "@/utils/parser";
 import { useWebContainer } from "@/hooks/useWebContainer";
 import { useSearchParams } from "next/navigation";
-import { Terminal } from "lucide-react";
+import { Terminal } from "@/components/Terminal";
 
 export default function Builder() {
   const searchParams = useSearchParams();
@@ -24,7 +24,7 @@ export default function Builder() {
   >([]);
   const [loading, setLoading] = useState(false);
   const [templateSet, setTemplateSet] = useState(false);
-  const webcontainer = useWebContainer();
+  const { webcontainer } = useWebContainer();
 
   const [currentStep, setCurrentStep] = useState(1);
   const [activeTab, setActiveTab] = useState<"code" | "preview">("code");
@@ -318,10 +318,7 @@ export default function Builder() {
               )}
             </div>
           </div>
-          <div className="border-t border-white/10 p-2 px-4 flex items-center gap-2">
-            <Terminal className="w-4 h-4" />
-            Console
-          </div>
+          <Terminal />
         </div>
       </div>
     </div>

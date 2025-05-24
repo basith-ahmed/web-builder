@@ -27,12 +27,12 @@ function FileNode({ item, depth, onFileClick }: FileNodeProps) {
   return (
     <div className="select-none">
       <div
-        className="flex items-center p-1 hover:bg-white/20 rounded-md cursor-pointer space-x-2 text-gray-200"
+        className="flex items-center p-1 hover:bg-white/20 rounded-md cursor-pointer space-x-2 text-white/80"
         style={{ paddingLeft: `${depth * 1.5}rem` }}
         onClick={handleClick}
       >
         {item.type === 'folder' && (
-          <span className="text-gray-400">
+          <span className="text-white/50">
             {isExpanded ? (
               <ChevronDown className="w-4 h-4" />
             ) : (
@@ -45,7 +45,7 @@ function FileNode({ item, depth, onFileClick }: FileNodeProps) {
         ) : (
           <File className="w-4 h-4" />
         )}
-        <span className="text-gray-200">{item.name}</span>
+        <span className="text-white/90">{item.name}</span>
       </div>
       {item.type === 'folder' && isExpanded && item.children && (
         <div>

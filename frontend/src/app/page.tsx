@@ -41,7 +41,7 @@ export default function Home() {
             <textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              placeholder="Make a study plan scheduler..."
+              placeholder="Make a To-Do List App..."
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();

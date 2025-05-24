@@ -157,6 +157,13 @@ function BuilderContent() {
 
     console.log(mountStructure);
     webcontainer?.mount(mountStructure);
+
+    // Cleanup function to unmount WebContainer when component unmounts
+    // return () => {
+    //   if (webcontainer) {
+    //     void webcontainer.teardown();
+    //   }
+    // };
   }, [files, webcontainer]);
 
   const fetchData = useCallback(async () => {
@@ -264,7 +271,7 @@ function BuilderContent() {
           <div className="flex-1 overflow-auto relative">
             <StepsList steps={steps} />
           </div>
-          <div className="sticky bottom-0 flex flex-col justify-between mx-4 mt-[1px] bg-[#141414] backdrop-blur-xl ring-1 ring-white/10 rounded-2xl overflow-hidden">
+          <div className="sticky bottom-0 flex flex-col justify-between mx-4 mt-[1px] bg-[#141415] backdrop-blur-xl ring-1 ring-white/10 rounded-2xl overflow-hidden">
             <textarea
               rows={1}
               value={userPrompt}

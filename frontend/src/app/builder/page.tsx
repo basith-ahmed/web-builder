@@ -15,6 +15,7 @@ import { useSearchParams } from "next/navigation";
 import { Terminal } from "@/components/Terminal";
 import { TerminalProvider } from "@/context/TerminalContext";
 import { useFileSystem } from "@/hooks/useFileSystem";
+import { cn } from "@/lib/utils";
 
 function BuilderContent() {
   const searchParams = useSearchParams();
@@ -24,15 +25,43 @@ function BuilderContent() {
   const [llmMessages, setLlmMessages] = useState<
     { role: "user" | "model"; parts: { text: string }[] }[]
   >([]);
-  // const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   // const [templateSet, setTemplateSet] = useState(false);
-  const webcontainer = useWebContainer()
+  const webcontainer = useWebContainer();
   const [activeTab, setActiveTab] = useState<"code" | "preview">("code");
   const [selectedFile, setSelectedFile] = useState<FileItem | null>(null);
   const [steps, setSteps] = useState<Step[]>([]);
   const [files, setFiles] = useState<FileItem[]>([]);
 
   useFileSystem(webcontainer, files);
+
+  useEffect(() => {
+    if (files.length > 0 && !selectedFile) {
+      const findFile = (items: FileItem[]): FileItem | null => {
+        for (const item of items) {
+          if (
+            item.type === "file" &&
+            (item.name === "App.tsx" ||
+              item.name === "App.jsx" ||
+              item.name === "index.ts" ||
+              item.name === "index.js")
+          ) {
+            return item;
+          }
+          if (item.type === "folder" && item.children) {
+            const found = findFile(item.children);
+            if (found) return found;
+          }
+        }
+        return null;
+      };
+
+      const defaultFile = findFile(files);
+      if (defaultFile) {
+        setSelectedFile(defaultFile);
+      }
+    }
+  }, [files, selectedFile]);
 
   useEffect(() => {
     let originalFiles = [...files];
@@ -120,7 +149,7 @@ function BuilderContent() {
       }))
     );
 
-    // setLoading(true);
+    setLoading(true);
     const stepsResponse = await axios.post(`${BACKEND_URL}/chat`, {
       messages: [...base, prompt].map((content) => ({
         role: "user",
@@ -129,8 +158,7 @@ function BuilderContent() {
     });
 
     console.log({ response: stepsResponse.data.response });
-
-    // setLoading(false);
+    setLoading(false);
 
     setSteps((s) => [
       ...s,
@@ -165,11 +193,11 @@ function BuilderContent() {
       parts: [{ text: userPrompt }],
     };
 
-    // setLoading(true);
+    setLoading(true);
     const stepsResponse = await axios.post(`${BACKEND_URL}/chat`, {
       messages: [...llmMessages, newMessage],
     });
-    // setLoading(false);
+    setLoading(false);
 
     setLlmMessages((x) => [...x, newMessage]);
     setLlmMessages((x) => [
@@ -210,7 +238,26 @@ function BuilderContent() {
           <div className="flex-1 overflow-auto relative">
             <StepsList steps={steps} />
           </div>
-          <div className="sticky bottom-0 flex flex-col justify-between mx-4 mt-[1px] bg-[#141415] backdrop-blur-xl ring-1 ring-white/10 rounded-2xl overflow-hidden">
+          <div
+            className={`sticky bottom-0 flex flex-col justify-between mx-4 mt-[1px] bg-[#141415] backdrop-blur-xl rounded-2xl overflow-hidden transition-all duration-300 ${
+              loading ? "" : "ring-1 ring-white/10"
+            }`}
+          >
+            {loading && (
+              <span
+                className={cn(
+                  "absolute inset-0 block h-full w-full animate-gradient rounded-[inherit] bg-gradient-to-r from-blue-400 via-blue-700 to-blue-400 bg-[length:300%_100%] p-[1.5px] transition-all duration-300"
+                )}
+                style={{
+                  WebkitMask:
+                    "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+                  WebkitMaskComposite: "destination-out",
+                  mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+                  maskComposite: "subtract",
+                  WebkitClipPath: "padding-box",
+                }}
+              />
+            )}
             <textarea
               rows={1}
               value={userPrompt}
@@ -222,11 +269,12 @@ function BuilderContent() {
                   handleSend();
                 }
               }}
-              className="resize-none py-3 px-4 w-full text-gray-100 bg-transparent focus:ring-0 focus:outline-none"
+              className="resize-none py-3 px-4 w-full text-gray-100 bg-transparent focus:ring-0 focus:outline-none z-20"
             />
             <button
               onClick={handleSend}
-              className={`m-2 p-1 w-24 ml-auto rounded-lg transition-all duration-300 border border-white/10 ${
+              disabled={loading}
+              className={`m-2 p-1 w-24 ml-auto rounded-lg transition-all duration-300 border border-white/10 z-20 ${
                 userPrompt
                   ? "bg-white hover:bg-white/90 text-black cursor-pointer"
                   : "bg-[#1f1f22]"
@@ -275,7 +323,13 @@ function BuilderContent() {
 
 export default function Builder() {
   return (
-    <Suspense fallback={<div className="h-screen flex items-center justify-center bg-[#0f0f10] text-white">Loading...</div>}>
+    <Suspense
+      fallback={
+        <div className="h-screen flex items-center justify-center bg-[#0f0f10] text-white">
+          Loading...
+        </div>
+      }
+    >
       <TerminalProvider>
         <BuilderContent />
       </TerminalProvider>

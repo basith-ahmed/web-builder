@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useTerminal } from "@/context/TerminalContext";
-import { TerminalIcon } from "lucide-react";
+import { PanelBottomClose, PanelBottomOpen, TerminalIcon } from "lucide-react";
 
 export function Terminal() {
   const { logs, clearLogs } = useTerminal();
@@ -20,7 +20,9 @@ export function Terminal() {
   return (
     <div className="border-t border-white/10 flex flex-col items-center overflow-hidden">
       <div
-        className={`w-full flex justify-between items-center cursor-pointer p-2 px-4 ${isCollapsed ? "pb-3.5": ""}`}
+        className={`w-full flex justify-between items-center cursor-pointer p-2 px-4 ${
+          isCollapsed ? "pb-3.5" : ""
+        }`}
         onClick={() => setIsCollapsed(!isCollapsed)}
       >
         <span className="font-medium flex items-center gap-x-1">
@@ -34,12 +36,18 @@ export function Terminal() {
                 e.stopPropagation();
                 clearLogs();
               }}
-              className="text-xs text-white/50 hover:text-white cursor-pointer"
+              className="text-xs duration-300 text-white/50 hover:text-red-400 cursor-pointer"
             >
               Clear
             </button>
           )}
-          <span className="text-gray-500">{isCollapsed ? "▼" : "▲"}</span>
+          <span className="">
+            {isCollapsed ? (
+              <PanelBottomOpen className="w-4 h-4" />
+            ) : (
+              <PanelBottomClose className="w-4 h-4" />
+            )}
+          </span>
         </div>
       </div>
       {!isCollapsed && (

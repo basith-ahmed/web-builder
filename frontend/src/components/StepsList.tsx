@@ -31,13 +31,6 @@ export function StepsList({ steps }: StepsListProps) {
           <div
             key={index}
             className={`flex items-center p-2 rounded-lg cursor-pointer transition-colors`}
-
-            //   ${
-            //   currentStep === step.id
-            //     ? "bg-white/10 border border-white/10"
-            //     : "hover:bg-white/5"
-            // }`}
-            // onClick={() => onStepClick(step.id)}
           >
             <div className="flex items-center gap-2">
               {step.status === "completed" ? (

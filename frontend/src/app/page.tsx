@@ -1,5 +1,7 @@
 "use client";
 
+import { DotPattern } from "@/components/ui/Dots";
+import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
@@ -29,14 +31,20 @@ export default function Home() {
           </span>
         </h1>
       </header>
-      <div className="h-full w-full p-2 pb-0 pt-0 flex items-center justify-center">
+      <div className="h-full w-full p-2 pb-0 pt-0 flex items-center justify-center relative">
+        <DotPattern
+          glow={true}
+          className={cn(
+            "[mask-image:radial-gradient(600px_250px_at_center,white,transparent)]"
+          )}
+        />
         <div className="space-y-4 w-full h-full bg-[#0f0f10] border border-white/10 rounded-lg flex flex-col items-center justify-center">
-          <h1 className="font-bold text-4xl text-transparent bg-clip-text bg-gradient-to-b from-white to-white/70">
+          <h1 className="font-bold text-4xl text-transparent bg-clip-text bg-gradient-to-b from-white to-white/70 z-20">
             What can I help to Build?
           </h1>
           <form
             onSubmit={handleSubmit}
-            className="bg-[#141414] w-[40rem] p-2 flex flex-col justify-between ring-1 ring-white/10 rounded-2xl"
+            className="bg-[#141414] w-[40rem] p-2 flex flex-col justify-between ring-1 ring-white/10 rounded-2xl z-20"
           >
             <textarea
               value={prompt}

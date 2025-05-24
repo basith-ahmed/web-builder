@@ -270,6 +270,12 @@ function BuilderContent() {
               value={userPrompt}
               onChange={(e) => setUserPrompt(e.target.value)}
               placeholder="Add a new feature..."
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSend();
+                }
+              }}
               className="resize-none py-3 px-4 w-full text-gray-100 bg-transparent focus:ring-0 focus:outline-none"
             />
             <button

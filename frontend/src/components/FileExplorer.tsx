@@ -66,10 +66,10 @@ function FileNode({ item, depth, onFileClick }: FileNodeProps) {
 export function FileExplorer({ files, onFileSelect }: FileExplorerProps) {
   return (
     <div className="rounded-lg p-4 h-full overflow-auto bg-[#0a0a0a]">
-      <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-gray-100">
+      {/* <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-gray-100">
         <FolderTree className="w-5 h-5" />
         File Explorer
-      </h2>
+      </h2> */}
       <div className="space-y-1">
         {files.slice().reverse().map((file, index) => (
           <FileNode

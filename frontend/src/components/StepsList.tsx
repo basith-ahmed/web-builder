@@ -11,14 +11,17 @@ export function StepsList({ steps }: StepsListProps) {
     <div className="rounded-lg p-4 h-full overflow-auto mx-8">
       <div className="absolute top-0 left-0 right-0 h-16 z-10 bg-gradient-to-b from-[#0f0f10] to-transparent pointer-events-none" />
       <h2 className="text-lg font-semibold mb-4 text-gray-100 mt-10">
-        Build Steps
+        Building
+        <span className="animate-pulse [animation-delay:0s]">.</span>
+        <span className="animate-pulse [animation-delay:0.2s]">.</span>
+        <span className="animate-pulse [animation-delay:0.4s]">.</span>
       </h2>
       <div className="space-y-4 mb-10">
         {steps.map((step, index) => (
           <div
             key={index}
             className={`flex items-center p-2 rounded-lg cursor-pointer transition-colors`}
-              
+
             //   ${
             //   currentStep === step.id
             //     ? "bg-white/10 border border-white/10"

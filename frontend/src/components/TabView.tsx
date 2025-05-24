@@ -17,7 +17,7 @@ export function TabView({
       <div className="flex h-8 space-x-2 w-fit">
         <button
           onClick={() => onTabChange("code")}
-          className={`flex items-center gap-2 p-2 rounded-md transition-colors ${
+          className={`cursor-pointer flex items-center gap-2 p-2 rounded-md transition-colors ${
             activeTab === "code"
               ? "bg-white/10 text-gray-100"
               : "text-white/80 hover:text-gray-200 hover:bg-white/10"
@@ -28,7 +28,7 @@ export function TabView({
         </button>
         <button
           onClick={() => onTabChange("preview")}
-          className={`flex items-center gap-2 p-2 rounded-md transition-colors ${
+          className={`cursor-pointer flex items-center gap-2 p-2 rounded-md transition-colors ${
             activeTab === "preview"
               ? "bg-white/10 text-gray-100"
               : "text-white/80 hover:text-gray-200 hover:bg-white/10"

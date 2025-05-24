@@ -41,12 +41,12 @@ export function PreviewFrame({ webContainer }: PreviewFrameProps) {
   }, [main, webContainer]);
 
   return (
-    <div className="h-full flex flex-col items-center justify-center text-gray-400">
+    <div className="h-full flex flex-col items-center justify-center text-white/50">
       {!url && (
-        <div className="text-center flex flex-col items-center justify-center">
-          <LoaderIcon className="animate-spin w-6 h-6" />
-          <p className="mb-2">Loading...</p>
-        </div>
+        <p className="mb-2 flex flex-col items-center gap-0.5">
+        <LoaderIcon className="animate-spin w-6 h-6" />
+          Loading Preview
+        </p>
       )}
       {url && (
         <>

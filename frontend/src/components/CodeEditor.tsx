@@ -9,8 +9,8 @@ interface CodeEditorProps {
 export function CodeEditor({ file }: CodeEditorProps) {
   if (!file) {
     return (
-      <div className="h-full w-full flex items-center justify-center text-gray-400">
-        Select a file to view its contents
+      <div className="h-full w-full flex items-center justify-center text-white/50">
+        Select a file to view its contents.
       </div>
     );
   }

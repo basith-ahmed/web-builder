@@ -18,7 +18,9 @@ export default function Home() {
     <div className="h-screen flex flex-col items-center justify-center bg-[#0a0a0a]">
       <header className="flex w-full justify-between items-center border-white/10 px-4 py-1.5">
         <p className="mt-1 truncate max-w-96 text-md">
-          <a href="" className="mr-1 font-semibold">Home /</a>
+          <a href="" className="mr-1 font-semibold">
+            Home /
+          </a>
         </p>
         <h1 className="flex items-center text-xl font-semibold text-gray-100">
           WebBuilder
@@ -27,7 +29,7 @@ export default function Home() {
           </span>
         </h1>
       </header>
-      <div className="h-full w-full p-2 pt-0 flex items-center justify-center">
+      <div className="h-full w-full p-2 pb-0 pt-0 flex items-center justify-center">
         <div className="space-y-4 w-full h-full bg-[#0f0f10] border border-white/10 rounded-lg flex flex-col items-center justify-center">
           <h1 className="font-bold text-4xl text-transparent bg-clip-text bg-gradient-to-b from-white to-white/70">
             What can I help to Build?
@@ -40,6 +42,12 @@ export default function Home() {
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               placeholder="Make a study plan scheduler..."
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSubmit(e as any);
+                }
+              }}
               className="resize-none py-3 px-4 w-full text-gray-100 bg-transparent focus:ring-0 focus:outline-none"
             />
             <button
@@ -54,6 +62,16 @@ export default function Home() {
             </button>
           </form>
         </div>
+      </div>
+      <div className="text-center text-[12px] my-1.5 opacity-55">
+        View WebBuilder on{" "}
+        <a
+          href="https://github.com/basith-ahmed/web-builder"
+          className="text-white font-semibold hover:underline"
+        >
+          GitHub
+        </a>
+        .
       </div>
     </div>
   );

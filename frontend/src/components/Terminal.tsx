@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
-import { useWebContainer } from '@/hooks/useWebContainer'
+import React, { useState } from "react";
+import { useTerminal } from "@/hooks/useTerminal";
 
 export function Terminal() {
-  const { terminalLogs } = useWebContainer()
-  const [isCollapsed, setIsCollapsed] = useState(true)
+  const { terminalLogs, clearLogs, logs } = useTerminal();
+  const [isCollapsed, setIsCollapsed] = useState(true);
 
   return (
     <div className="border-t border-white/10 flex flex-col items-center overflow-hidden">
@@ -16,8 +16,8 @@ export function Terminal() {
       </div>
       {!isCollapsed && (
         <div className="w-full p-4 bg-black text-white/80 font-mono h-64 overflow-y-auto">
-          {terminalLogs.map((log, index) => (
-            <div key={index} className="mb-1">
+          {logs.map((log, index) => (
+            <div key={index} className="mb-1 bg-red-300">
               {log}
             </div>
           ))}

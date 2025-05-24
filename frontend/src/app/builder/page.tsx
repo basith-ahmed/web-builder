@@ -25,7 +25,7 @@ function BuilderContent() {
   >([]);
   // const [loading, setLoading] = useState(false);
   // const [templateSet, setTemplateSet] = useState(false);
-  const { webcontainer } = useWebContainer();
+  const webcontainer = useWebContainer()
 
   // const [currentStep, setCurrentStep] = useState(1);
   const [activeTab, setActiveTab] = useState<"code" | "preview">("code");

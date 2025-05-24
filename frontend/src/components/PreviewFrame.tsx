@@ -1,4 +1,4 @@
-import { useWebContainer } from "@/hooks/useWebContainer";
+import { useTerminal } from "@/hooks/useTerminal";
 import { WebContainer } from "@webcontainer/api";
 import { Link2, LoaderIcon } from "lucide-react";
 import React, { useCallback, useEffect, useState } from "react";
@@ -8,25 +8,29 @@ interface PreviewFrameProps {
 }
 
 export function PreviewFrame({ webContainer }: PreviewFrameProps) {
-  const { setTerminalLogs } = useWebContainer();
+  const { appendLog, terminalLogs, setLogs } = useTerminal();
   const [url, setUrl] = useState("");
 
-  async function main() {
+  const main = useCallback(async () => {
     if (!webContainer) {
       console.error("WebContainer is not initialized");
       return;
     }
+    appendLog("installing dependancies...");
+    appendLog("npm install");
     const installProcess = await webContainer.spawn("npm", ["install"]);
 
     installProcess.output.pipeTo(
       new WritableStream({
         write(data) {
           console.log(data);
-          // setTerminalLogs((prev) => [...prev, data]);
+          appendLog(data);
+          setLogs((log) => [...log, data]);
         },
       })
     );
-
+    appendLog("npm run dev");
+    console.log({ logs: terminalLogs });
     await webContainer.spawn("npm", ["run", "dev"]);
 
     // Wait for the`server-ready` event
@@ -34,11 +38,11 @@ export function PreviewFrame({ webContainer }: PreviewFrameProps) {
       console.log({ url: url, port: port });
       setUrl(url);
     });
-  }
+  }, [webContainer]);
 
   useEffect(() => {
     if (webContainer) main();
-  }, []);
+  }, [main, webContainer]);
 
   return (
     <div className="h-full flex flex-col items-center justify-center text-white/50">

@@ -1,36 +1,43 @@
-import { useTerminal } from "@/hooks/useTerminal";
 import { WebContainer } from "@webcontainer/api";
 import { Link2, LoaderIcon } from "lucide-react";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useRef } from "react";
+import { useTerminal } from "@/context/TerminalContext";
 
 interface PreviewFrameProps {
   webContainer: WebContainer | null;
 }
 
 export function PreviewFrame({ webContainer }: PreviewFrameProps) {
-  const { appendLog, terminalLogs, setLogs } = useTerminal();
+  const { appendLog } = useTerminal();
   const [url, setUrl] = useState("");
+  const appendLogRef = useRef(appendLog);
+
+  // Update ref when appendLog changes
+  useEffect(() => {
+    appendLogRef.current = appendLog;
+  }, [appendLog]);
 
   const main = useCallback(async () => {
     if (!webContainer) {
       console.error("WebContainer is not initialized");
       return;
     }
-    appendLog("installing dependancies...");
-    appendLog("npm install");
+
+    appendLogRef.current("installing dependancies...");
+    appendLogRef.current("npm install");
     const installProcess = await webContainer.spawn("npm", ["install"]);
 
     installProcess.output.pipeTo(
       new WritableStream({
         write(data) {
+          const logMessage = typeof data === 'string' ? data : new TextDecoder().decode(data);
           console.log(data);
-          appendLog(data);
-          setLogs((log) => [...log, data]);
+          appendLogRef.current(logMessage);
         },
       })
     );
-    appendLog("npm run dev");
-    console.log({ logs: terminalLogs });
+
+    appendLogRef.current("npm run dev");
     await webContainer.spawn("npm", ["run", "dev"]);
 
     // Wait for the`server-ready` event
@@ -49,7 +56,6 @@ export function PreviewFrame({ webContainer }: PreviewFrameProps) {
       <div className="w-full p-2">
         <span className="text-sm text-white flex items-center space-x-1 px-2 py-1 w-full bg-white/10 rounded-md">
           <Link2 className="w-4 h-4 text-green-400" />
-
           <p className="flex items-center">
             :{" /"}
             {webContainer?.path?.replace(

@@ -14,6 +14,7 @@ import { useWebContainer } from "@/hooks/useWebContainer";
 import { useSearchParams } from "next/navigation";
 import { Terminal } from "@/components/Terminal";
 import { FileSystemTree } from "@webcontainer/api";
+import { TerminalProvider } from "@/context/TerminalContext";
 
 function BuilderContent() {
   const searchParams = useSearchParams();
@@ -337,7 +338,9 @@ function BuilderContent() {
 export default function Builder() {
   return (
     <Suspense fallback={<div className="h-screen flex items-center justify-center bg-[#0f0f10] text-white">Loading...</div>}>
-      <BuilderContent />
+      <TerminalProvider>
+        <BuilderContent />
+      </TerminalProvider>
     </Suspense>
   );
 }

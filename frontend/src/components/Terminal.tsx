@@ -1,9 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useTerminal } from "@/context/TerminalContext";
 
 export function Terminal() {
   const { logs, clearLogs } = useTerminal();
   const [isCollapsed, setIsCollapsed] = useState(true);
+  const logsEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    logsEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    if (!isCollapsed) {
+      scrollToBottom();
+    }
+  }, [logs, isCollapsed]);
 
   return (
     <div className="border-t border-white/10 flex flex-col items-center overflow-hidden">
@@ -34,6 +45,7 @@ export function Terminal() {
               {log}
             </div>
           ))}
+          <div ref={logsEndRef} />
         </div>
       )}
     </div>

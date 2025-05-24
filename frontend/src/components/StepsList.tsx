@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { CheckCircle, Circle, Clock } from 'lucide-react';
 import { Step } from '@/types';
 
@@ -7,6 +7,16 @@ interface StepsListProps {
 }
 
 export function StepsList({ steps }: StepsListProps) {
+  const stepsEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    stepsEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [steps]);
+
   return (
     <div className="rounded-lg p-4 h-full overflow-auto mx-8">
       <div className="absolute top-0 left-0 right-0 h-16 z-10 bg-gradient-to-b from-[#0f0f10] to-transparent pointer-events-none" />
@@ -42,6 +52,7 @@ export function StepsList({ steps }: StepsListProps) {
             <p className="text-sm text-gray-400 mt-2">{step.description}</p>
           </div>
         ))}
+        <div ref={stepsEndRef} />
       </div>
       <div className="absolute bottom-0 left-0 right-0 h-10 z-10 bg-gradient-to-t from-[#0f0f10] to-transparent pointer-events-none" />
     </div>

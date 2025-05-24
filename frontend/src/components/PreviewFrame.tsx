@@ -1,55 +1,14 @@
 import { WebContainer } from "@webcontainer/api";
 import { Link2, LoaderIcon } from "lucide-react";
-import React, { useCallback, useEffect, useState, useRef } from "react";
-import { useTerminal } from "@/context/TerminalContext";
-import { installDependencies, startDevServer } from "@/lib/webcontainer";
+import React from "react";
 
 interface PreviewFrameProps {
   webContainer: WebContainer | null;
+  url: string;
+  isInstalling: boolean;
 }
 
-export function PreviewFrame({ webContainer }: PreviewFrameProps) {
-  const { appendLog } = useTerminal();
-  const [url, setUrl] = useState("");
-  const [isInstalling, setIsInstalling] = useState(false);
-  const [isServerRunning, setIsServerRunning] = useState(false);
-  const appendLogRef = useRef(appendLog);
-
-  useEffect(() => {
-    appendLogRef.current = appendLog;
-  }, [appendLog]);
-
-  const handleInstall = useCallback(async () => {
-    if (!webContainer || isInstalling) return;
-
-    try {
-      setIsInstalling(true);
-      await installDependencies(webContainer, appendLogRef.current);
-      setIsInstalling(false);
-      await startDevServer(webContainer, appendLogRef.current);
-      setIsServerRunning(true);
-    } catch (error) {
-      console.error("Failed to setup environment:", error);
-      appendLogRef.current(`Error: ${error}`);
-      setIsInstalling(false);
-    }
-  }, [webContainer, isInstalling]);
-
-  useEffect(() => {
-    if (webContainer && !isInstalling && !isServerRunning) {
-      handleInstall();
-    }
-  }, [webContainer, isInstalling, isServerRunning, handleInstall]);
-
-  useEffect(() => {
-    if (!webContainer) return;
-
-    webContainer.on("server-ready", (port: number, url: string) => {
-      console.log({ url, port });
-      setUrl(url);
-    });
-  }, [webContainer]);
-
+export function PreviewFrame({ webContainer, url, isInstalling }: PreviewFrameProps) {
   return (
     <div className="h-full flex flex-col items-center justify-center text-white/50">
       <div className="w-full p-2 flex items-center justify-center">

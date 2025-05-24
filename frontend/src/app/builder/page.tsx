@@ -1,6 +1,12 @@
 "use client";
 
-import React, { useCallback, useEffect, useState, Suspense } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useState,
+  Suspense,
+  useRef,
+} from "react";
 import { StepsList } from "@/components/StepsList";
 import { FileExplorer } from "@/components/FileExplorer";
 import { TabView } from "@/components/TabView";
@@ -13,9 +19,11 @@ import { parseXml } from "@/utils/parser";
 import { useWebContainer } from "@/hooks/useWebContainer";
 import { useSearchParams } from "next/navigation";
 import { Terminal } from "@/components/Terminal";
-import { TerminalProvider } from "@/context/TerminalContext";
+import { TerminalProvider, useTerminal } from "@/context/TerminalContext";
 import { useFileSystem } from "@/hooks/useFileSystem";
 import { cn } from "@/lib/utils";
+import { installDependencies, startDevServer } from "@/lib/webcontainer";
+import { Slash } from "lucide-react";
 
 function BuilderContent() {
   const searchParams = useSearchParams();
@@ -26,15 +34,57 @@ function BuilderContent() {
     { role: "user" | "model"; parts: { text: string }[] }[]
   >([]);
   const [loading, setLoading] = useState(false);
-  // const [templateSet, setTemplateSet] = useState(false);
   const webcontainer = useWebContainer();
   const [activeTab, setActiveTab] = useState<"code" | "preview">("code");
   const [selectedFile, setSelectedFile] = useState<FileItem | null>(null);
   const [steps, setSteps] = useState<Step[]>([]);
   const [files, setFiles] = useState<FileItem[]>([]);
 
+  // WebContainer Preview
+  const { appendLog } = useTerminal();
+  const [url, setUrl] = useState("");
+  const [isInstalling, setIsInstalling] = useState(false);
+  const [isServerRunning, setIsServerRunning] = useState(false);
+  const appendLogRef = useRef(appendLog);
+
+  useEffect(() => {
+    appendLogRef.current = appendLog;
+  }, [appendLog]);
+
+  const handleInstall = useCallback(async () => {
+    if (!webcontainer || isInstalling) return;
+
+    try {
+      setIsInstalling(true);
+      await installDependencies(webcontainer, appendLogRef.current);
+      setIsInstalling(false);
+      await startDevServer(webcontainer, appendLogRef.current);
+      setIsServerRunning(true);
+    } catch (error) {
+      console.error("Failed to setup environment:", error);
+      appendLogRef.current(`Error: ${error}`);
+      setIsInstalling(false);
+    }
+  }, [webcontainer, isInstalling]);
+
+  useEffect(() => {
+    if (webcontainer && !isInstalling && !isServerRunning) {
+      handleInstall();
+    }
+  }, [webcontainer, isInstalling, isServerRunning, handleInstall]);
+
+  useEffect(() => {
+    if (!webcontainer) return;
+
+    webcontainer.on("server-ready", (port: number, url: string) => {
+      console.log({ url, port });
+      setUrl(url);
+    });
+  }, [webcontainer]);
+
   useFileSystem(webcontainer, files);
 
+  // Just for setting the Default file when first mounting
   useEffect(() => {
     if (files.length > 0 && !selectedFile) {
       const findFile = (items: FileItem[]): FileItem | null => {
@@ -63,6 +113,7 @@ function BuilderContent() {
     }
   }, [files, selectedFile]);
 
+  // Writing the newly fetched data into files on each response
   useEffect(() => {
     let originalFiles = [...files];
     let updateHappened = false;
@@ -134,11 +185,11 @@ function BuilderContent() {
     console.log(files);
   }, [steps, files]);
 
+  // Fetching the template files on mounting
   const fetchData = useCallback(async () => {
     const response = await axios.post(`${BACKEND_URL}/template`, {
       prompt: prompt!.trim(),
     });
-    // setTemplateSet(true);
 
     const { base, defaultFiles } = response.data;
 
@@ -180,11 +231,11 @@ function BuilderContent() {
       { role: "model", parts: [{ text: stepsResponse.data.response }] },
     ]);
   }, [prompt]);
-
   useEffect(() => {
     fetchData();
   }, [fetchData]);
 
+  // Chat
   const handleSend = async () => {
     if (!userPrompt) return;
     setUserPrompt("");
@@ -221,13 +272,14 @@ function BuilderContent() {
     <div className="h-screen flex flex-col  bg-[#0f0f10]">
       <header className="flex justify-between items-center border-white/10 px-4 py-1.5">
         {/* <div className="w-[2px] rounded-full bg-white/20 mx-2"></div> */}
-        <p className="mt-1 truncate max-w-96 text-md">
-          <span className="mr-1 font-semibold">Builder /</span>
-          <span className="text-white/50">{prompt}</span>
+        <p className="mt-1 truncate max-w-96 text-md flex items-center">
+          <span className="font-semibold">Builder</span>
+          <Slash className="w-4 h-4 -rotate-20 mx-[2px] font-semibold text-white/50" />
+          <span className="">{prompt}</span>
         </p>
-        <h1 className="flex items-center text-xl font-semibold text-gray-100">
+        <h1 className="flex items-center text-xl font-semibold text-white/70">
           WebBuilder
-          <span className="animate-gradient bg-gradient-to-r from-blue-400 via-blue-600 to-blue-400 bg-[length:200%_200%] text-transparent bg-clip-text">
+          <span className="animate-gradient bg-gradient-to-r from-white/60 via-white to-white/60 bg-[length:200%_200%] text-transparent bg-clip-text">
             .AI
           </span>
         </h1>
@@ -243,21 +295,23 @@ function BuilderContent() {
               loading ? "" : "ring-1 ring-white/10"
             }`}
           >
-            {loading && (
-              <span
-                className={cn(
-                  "absolute inset-0 block h-full w-full animate-gradient rounded-[inherit] bg-gradient-to-r from-blue-400 via-blue-700 to-blue-400 bg-[length:300%_100%] p-[1.5px] transition-all duration-300"
-                )}
-                style={{
-                  WebkitMask:
-                    "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-                  WebkitMaskComposite: "destination-out",
-                  mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-                  maskComposite: "subtract",
-                  WebkitClipPath: "padding-box",
-                }}
-              />
-            )}
+            <span
+              className={cn(
+                "absolute inset-0 block h-full w-full animate-gradient rounded-[inherit] bg-gradient-to-r from-white/30 via-white/60 to-white/30 bg-[length:300%_100%] p-[1.5px] transition-all duration-500",
+                {
+                  "opacity-100": loading,
+                  "opacity-0": !loading,
+                }
+              )}
+              style={{
+                WebkitMask:
+                  "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+                WebkitMaskComposite: "destination-out",
+                mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+                maskComposite: "subtract",
+                WebkitClipPath: "padding-box",
+              }}
+            />
             <textarea
               rows={1}
               value={userPrompt}
@@ -310,7 +364,11 @@ function BuilderContent() {
               {activeTab === "code" ? (
                 <CodeEditor file={selectedFile} />
               ) : (
-                <PreviewFrame webContainer={webcontainer} />
+                <PreviewFrame
+                  webContainer={webcontainer}
+                  url={url}
+                  isInstalling={isInstalling}
+                />
               )}
             </div>
           </div>

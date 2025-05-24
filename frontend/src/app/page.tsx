@@ -2,6 +2,7 @@
 
 import { DotPattern } from "@/components/ui/Dots";
 import { cn } from "@/lib/utils";
+import { Slash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
@@ -19,14 +20,15 @@ export default function Home() {
   return (
     <div className="h-screen flex flex-col items-center justify-center bg-[#0a0a0a]">
       <header className="flex w-full justify-between items-center border-white/10 px-4 py-1.5">
-        <p className="mt-1 truncate max-w-96 text-md">
-          <a href="" className="mr-1 font-semibold">
-            Home /
+        <p className="mt-1 truncate max-w-96 text-md flex items-center">
+          <a href="" className="font-semibold">
+            <span className="font-semibold">Home</span>
           </a>
+          <Slash className="w-4 h-4 -rotate-20 mx-[2px] font-semibold text-white/50" />
         </p>
-        <h1 className="flex items-center text-xl font-semibold text-gray-100">
+        <h1 className="flex items-center text-xl font-semibold text-white/70">
           WebBuilder
-          <span className="animate-gradient bg-gradient-to-r from-blue-400 via-blue-600 to-blue-400 bg-[length:200%_200%] text-transparent bg-clip-text">
+          <span className="animate-gradient bg-gradient-to-r from-white/60 via-white to-white/60 bg-[length:200%_200%] text-transparent bg-clip-text">
             .AI
           </span>
         </h1>

@@ -4,11 +4,9 @@ import { Step } from '@/types';
 
 interface StepsListProps {
   steps: Step[];
-  currentStep: number;
-  onStepClick: (stepId: number) => void;
 }
 
-export function StepsList({ steps, currentStep, onStepClick }: StepsListProps) {
+export function StepsList({ steps }: StepsListProps) {
   return (
     <div className="rounded-lg p-4 h-full overflow-auto mx-8">
       <div className="absolute top-0 left-0 right-0 h-16 z-10 bg-gradient-to-b from-[#0f0f10] to-transparent pointer-events-none" />

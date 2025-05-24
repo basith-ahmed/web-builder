@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, Suspense } from "react";
 import { StepsList } from "@/components/StepsList";
 import { FileExplorer } from "@/components/FileExplorer";
 import { TabView } from "@/components/TabView";
@@ -13,8 +13,9 @@ import { parseXml } from "@/utils/parser";
 import { useWebContainer } from "@/hooks/useWebContainer";
 import { useSearchParams } from "next/navigation";
 import { Terminal } from "@/components/Terminal";
+import { FileSystemTree } from "@webcontainer/api";
 
-export default function Builder() {
+function BuilderContent() {
   const searchParams = useSearchParams();
   const prompt = searchParams.get("prompt");
 
@@ -22,11 +23,11 @@ export default function Builder() {
   const [llmMessages, setLlmMessages] = useState<
     { role: "user" | "model"; parts: { text: string }[] }[]
   >([]);
-  const [loading, setLoading] = useState(false);
-  const [templateSet, setTemplateSet] = useState(false);
+  // const [loading, setLoading] = useState(false);
+  // const [templateSet, setTemplateSet] = useState(false);
   const { webcontainer } = useWebContainer();
 
-  const [currentStep, setCurrentStep] = useState(1);
+  // const [currentStep, setCurrentStep] = useState(1);
   const [activeTab, setActiveTab] = useState<"code" | "preview">("code");
   const [selectedFile, setSelectedFile] = useState<FileItem | null>(null);
 
@@ -44,17 +45,17 @@ export default function Builder() {
         if (step?.type === StepType.CreateFile) {
           let parsedPath = step.path?.split("/") ?? [];
           let currentFileStructure = [...originalFiles];
-          let finalAnswerRef = currentFileStructure;
+          const finalAnswerRef = currentFileStructure;
 
           let currentFolder = "";
           while (parsedPath.length) {
             currentFolder = `${currentFolder}/${parsedPath[0]}`;
-            let currentFolderName = parsedPath[0];
+            const currentFolderName = parsedPath[0];
             parsedPath = parsedPath.slice(1);
 
             if (!parsedPath.length) {
               // File
-              let file = currentFileStructure.find(
+              const file = currentFileStructure.find(
                 (x) => x.path === currentFolder
               );
               if (!file) {
@@ -69,7 +70,7 @@ export default function Builder() {
               }
             } else {
               // Folder
-              let folder = currentFileStructure.find(
+              const folder = currentFileStructure.find(
                 (x) => x.path === currentFolder
               );
               if (!folder) {
@@ -106,8 +107,8 @@ export default function Builder() {
   }, [steps, files]);
 
   useEffect(() => {
-    const createMountStructure = (files: FileItem[]): Record<string, any> => {
-      const mountStructure: Record<string, any> = {};
+    const createMountStructure = (files: FileItem[]): FileSystemTree => {
+      const mountStructure: FileSystemTree = {};
 
       const processFile = (file: FileItem, isRootFolder: boolean) => {
         if (file.type === "folder") {
@@ -158,11 +159,11 @@ export default function Builder() {
     webcontainer?.mount(mountStructure);
   }, [files, webcontainer]);
 
-  async function fetchData() {
+  const fetchData = useCallback(async () => {
     const response = await axios.post(`${BACKEND_URL}/template`, {
       prompt: prompt!.trim(),
     });
-    setTemplateSet(true);
+    // setTemplateSet(true);
 
     const { base, defaultFiles } = response.data;
 
@@ -173,7 +174,7 @@ export default function Builder() {
       }))
     );
 
-    setLoading(true);
+    // setLoading(true);
     const stepsResponse = await axios.post(`${BACKEND_URL}/chat`, {
       messages: [...base, prompt].map((content) => ({
         role: "user",
@@ -183,13 +184,13 @@ export default function Builder() {
 
     console.log({ response: stepsResponse.data.response });
 
-    setLoading(false);
+    // setLoading(false);
 
     setSteps((s) => [
       ...s,
       ...parseXml(stepsResponse.data.response).map((x) => ({
         ...x,
-        status: "pending" as "pending",
+        status: "pending" as const,
       })),
     ]);
 
@@ -204,25 +205,25 @@ export default function Builder() {
       ...x,
       { role: "model", parts: [{ text: stepsResponse.data.response }] },
     ]);
-  }
+  }, [prompt]);
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   const handleSend = async () => {
     if (!userPrompt) return;
     setUserPrompt("");
     const newMessage = {
-      role: "user" as "user",
+      role: "user" as const,
       parts: [{ text: userPrompt }],
     };
 
-    setLoading(true);
+    // setLoading(true);
     const stepsResponse = await axios.post(`${BACKEND_URL}/chat`, {
       messages: [...llmMessages, newMessage],
     });
-    setLoading(false);
+    // setLoading(false);
 
     setLlmMessages((x) => [...x, newMessage]);
     setLlmMessages((x) => [
@@ -237,7 +238,7 @@ export default function Builder() {
       ...s,
       ...parseXml(stepsResponse.data.response).map((x) => ({
         ...x,
-        status: "pending" as "pending",
+        status: "pending" as const,
       })),
     ]);
   };
@@ -261,11 +262,7 @@ export default function Builder() {
       <div className="flex-1 grid grid-cols-3 overflow-hidden">
         <div className="col-span-1 overflow-auto flex flex-col h-full pb-2">
           <div className="flex-1 overflow-auto relative">
-            <StepsList
-              steps={steps}
-              currentStep={currentStep}
-              onStepClick={setCurrentStep}
-            />
+            <StepsList steps={steps} />
           </div>
           <div className="sticky bottom-0 flex flex-col justify-between mx-4 mt-[1px] bg-[#141414] backdrop-blur-xl ring-1 ring-white/10 rounded-2xl overflow-hidden">
             <textarea
@@ -303,7 +300,6 @@ export default function Builder() {
             activeTab={activeTab}
             onTabChange={setActiveTab}
             selectedFile={selectedFile}
-            webContainer={webcontainer}
           />
           <div className="h-full grid grid-cols-4 overflow-hidden border-t border-white/10">
             <div className="col-span-1 overflow-auto border-r border-white/10">
@@ -314,7 +310,7 @@ export default function Builder() {
               {activeTab === "code" ? (
                 <CodeEditor file={selectedFile} />
               ) : (
-                <PreviewFrame webContainer={webcontainer} files={files} />
+                <PreviewFrame webContainer={webcontainer} />
               )}
             </div>
           </div>
@@ -322,5 +318,13 @@ export default function Builder() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function Builder() {
+  return (
+    <Suspense fallback={<div className="h-screen flex items-center justify-center bg-[#0f0f10] text-white">Loading...</div>}>
+      <BuilderContent />
+    </Suspense>
   );
 }

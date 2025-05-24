@@ -1,19 +1,17 @@
 import { useWebContainer } from "@/hooks/useWebContainer";
 import { WebContainer } from "@webcontainer/api";
 import { Link2, LoaderIcon } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 interface PreviewFrameProps {
-  files: any[];
   webContainer: WebContainer | null;
 }
 
-export function PreviewFrame({ files, webContainer }: PreviewFrameProps) {
-  
-  const { setTerminalLogs } = useWebContainer();  
+export function PreviewFrame({ webContainer }: PreviewFrameProps) {
+  const { setTerminalLogs } = useWebContainer();
   const [url, setUrl] = useState("");
 
-  async function main() {
+  const main = useCallback( async () => {
     if (!webContainer) {
       console.error("WebContainer is not initialized");
       return;
@@ -36,11 +34,12 @@ export function PreviewFrame({ files, webContainer }: PreviewFrameProps) {
       console.log({ url: url, port: port });
       setUrl(url);
     });
-  }
+  }, [webContainer, setTerminalLogs]);
 
   useEffect(() => {
     if (webContainer) main();
-  }, []);
+  }, [main, webContainer]);
+
   return (
     <div className="h-full flex flex-col items-center justify-center text-gray-400">
       {!url && (

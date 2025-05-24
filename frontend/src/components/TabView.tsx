@@ -1,19 +1,16 @@
 import React from "react";
-import { Code2, Eye, File, Link2, ScreenShare } from "lucide-react";
+import { Code2, Eye, ScreenShare } from "lucide-react";
 import { FileItem } from "@/types";
-import { WebContainer } from "@webcontainer/api";
 interface TabViewProps {
   activeTab: "code" | "preview";
   onTabChange: (tab: "code" | "preview") => void;
   selectedFile: FileItem | null;
-  webContainer: WebContainer | null;
 }
 
 export function TabView({
   activeTab,
   onTabChange,
   selectedFile,
-  webContainer,
 }: TabViewProps) {
   return (
     <div className="flex items-center justify-between p-2">
@@ -48,12 +45,6 @@ export function TabView({
           <p>{selectedFile.name}</p>
         </span>
       )}
-      {/* {selectedFile && activeTab === "preview" && (
-        <span className="text-md text-white flex items-center space-x-1 px-2 py-1 w-full bg-white/10 rounded-md ml-2">
-          <Link2 className="w-4 h-4" />
-          <p>{webContainer?.path}</p>
-        </span>
-      )} */}
     </div>
   );
 }

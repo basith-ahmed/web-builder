@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Wand2 } from "lucide-react";
 
 export default function Home() {
   const [prompt, setPrompt] = useState("");

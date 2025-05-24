@@ -39,9 +39,20 @@ export function Terminal() {
         </div>
       </div>
       {!isCollapsed && (
-        <div className="w-full p-4 bg-black text-white/80 font-mono h-64 overflow-y-auto">
+        <div className="w-full p-4 text-sm bg-black text-white/80 font-mono h-64 overflow-y-auto">
           {logs.map((log, index) => (
-            <div key={index} className="mb-1 whitespace-pre-wrap break-all">
+            <div 
+              key={index} 
+              className={`mb-1 whitespace-pre-wrap break-all ${
+                log.includes("error") || log.includes("Error") 
+                  ? "text-red-400" 
+                  : log.includes("warning") || log.includes("Warning")
+                  ? "text-yellow-400"
+                  : log.includes("success") || log.includes("Success")
+                  ? "text-green-400"
+                  : ""
+              }`}
+            >
               {log}
             </div>
           ))}

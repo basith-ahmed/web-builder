@@ -12,10 +12,17 @@ export function PreviewFrame({ webContainer }: PreviewFrameProps) {
   const [url, setUrl] = useState("");
   const appendLogRef = useRef(appendLog);
 
-  // Update ref when appendLog changes
   useEffect(() => {
     appendLogRef.current = appendLog;
   }, [appendLog]);
+
+  const formatLog = (data: string) => {
+    let cleaned = data.replace(/\x1B\[[0-9;]*[a-zA-Z]/g, '');
+    cleaned = cleaned.replace(/\\/g, '').trim();
+    if (cleaned) {
+      appendLogRef.current(cleaned);
+    }
+  };
 
   const main = useCallback(async () => {
     if (!webContainer) {
@@ -23,21 +30,22 @@ export function PreviewFrame({ webContainer }: PreviewFrameProps) {
       return;
     }
 
-    appendLogRef.current("installing dependancies...");
-    appendLogRef.current("npm install");
+    appendLogRef.current("Installing dependencies...");
+    appendLogRef.current("Running: npm install");
     const installProcess = await webContainer.spawn("npm", ["install"]);
 
     installProcess.output.pipeTo(
       new WritableStream({
         write(data) {
-          const logMessage = typeof data === 'string' ? data : new TextDecoder().decode(data);
-          console.log(data);
-          appendLogRef.current(logMessage);
+          const logMessage = typeof data === "string" ? data : new TextDecoder().decode(data);
+          console.log('Raw log:', logMessage);
+          formatLog(logMessage);
         },
       })
     );
 
-    appendLogRef.current("npm run dev");
+    appendLogRef.current("Starting development server...");
+    appendLogRef.current("Running: npm run dev");
     await webContainer.spawn("npm", ["run", "dev"]);
 
     // Wait for the`server-ready` event
@@ -53,11 +61,11 @@ export function PreviewFrame({ webContainer }: PreviewFrameProps) {
 
   return (
     <div className="h-full flex flex-col items-center justify-center text-white/50">
-      <div className="w-full p-2">
+      <div className="w-full p-2 flex items-center justify-center">
+        <Link2 className="w-4 h-4 text-white/80 mr-2" />
         <span className="text-sm text-white flex items-center space-x-1 px-2 py-1 w-full bg-white/10 rounded-md">
-          <Link2 className="w-4 h-4 text-green-400" />
           <p className="flex items-center">
-            :{" /"}
+            {" /"}
             {webContainer?.path?.replace(
               webContainer.path.substring(
                 0,

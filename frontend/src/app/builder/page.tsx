@@ -13,8 +13,8 @@ import { parseXml } from "@/utils/parser";
 import { useWebContainer } from "@/hooks/useWebContainer";
 import { useSearchParams } from "next/navigation";
 import { Terminal } from "@/components/Terminal";
-import { FileSystemTree } from "@webcontainer/api";
 import { TerminalProvider } from "@/context/TerminalContext";
+import { useFileSystem } from "@/hooks/useFileSystem";
 
 function BuilderContent() {
   const searchParams = useSearchParams();
@@ -27,14 +27,12 @@ function BuilderContent() {
   // const [loading, setLoading] = useState(false);
   // const [templateSet, setTemplateSet] = useState(false);
   const webcontainer = useWebContainer()
-
-  // const [currentStep, setCurrentStep] = useState(1);
   const [activeTab, setActiveTab] = useState<"code" | "preview">("code");
   const [selectedFile, setSelectedFile] = useState<FileItem | null>(null);
-
   const [steps, setSteps] = useState<Step[]>([]);
-
   const [files, setFiles] = useState<FileItem[]>([]);
+
+  useFileSystem(webcontainer, files);
 
   useEffect(() => {
     let originalFiles = [...files];
@@ -106,66 +104,6 @@ function BuilderContent() {
     }
     console.log(files);
   }, [steps, files]);
-
-  useEffect(() => {
-    const createMountStructure = (files: FileItem[]): FileSystemTree => {
-      const mountStructure: FileSystemTree = {};
-
-      const processFile = (file: FileItem, isRootFolder: boolean) => {
-        if (file.type === "folder") {
-          /*
-           *  Create a folkder entry
-           *  This creates a nested structure for folders
-           *  The structure is specifically built for webcontainers
-           */
-          mountStructure[file.name] = {
-            directory: file.children
-              ? Object.fromEntries(
-                  file.children.map((child) => [
-                    child.name,
-                    processFile(child, false),
-                  ])
-                )
-              : {},
-          };
-        } else if (file.type === "file") {
-          // Create a file entry
-          if (isRootFolder) {
-            mountStructure[file.name] = {
-              file: {
-                contents: file.content || "",
-              },
-            };
-          } else {
-            return {
-              file: {
-                contents: file.content || "",
-              },
-            };
-          }
-        }
-
-        return mountStructure[file.name];
-      };
-
-      // Process each top-level file/folder
-      files.forEach((file) => processFile(file, true));
-
-      return mountStructure;
-    };
-
-    const mountStructure = createMountStructure(files);
-
-    console.log(mountStructure);
-    webcontainer?.mount(mountStructure);
-
-    // Cleanup function to unmount WebContainer when component unmounts
-    // return () => {
-    //   if (webcontainer) {
-    //     void webcontainer.teardown();
-    //   }
-    // };
-  }, [files, webcontainer]);
 
   const fetchData = useCallback(async () => {
     const response = await axios.post(`${BACKEND_URL}/template`, {

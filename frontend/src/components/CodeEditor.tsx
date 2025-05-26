@@ -1,6 +1,6 @@
-import React from 'react';
-import Editor from '@monaco-editor/react';
-import { FileItem } from '@/types';
+import React from "react";
+import Editor from "@monaco-editor/react";
+import { FileItem } from "@/types";
 
 interface CodeEditorProps {
   file: FileItem | null;
@@ -17,6 +17,7 @@ export function CodeEditor({ file }: CodeEditorProps) {
 
   return (
     <Editor
+      className="bg-black"
       height="100%"
       defaultLanguage="javascript"
       theme="vs-dark"

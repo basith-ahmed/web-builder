@@ -360,8 +360,8 @@ function BuilderContent() {
               <FileExplorer files={files} onFileSelect={setSelectedFile} />
             </div>
 
-            <div className="col-span-3 flex-1">
-              {activeTab === "code" ? (
+            <div className="col-span-3 flex-1 relative">
+              {/* {activeTab === "code" ? (
                 <CodeEditor file={selectedFile} />
               ) : (
                 <PreviewFrame
@@ -369,7 +369,17 @@ function BuilderContent() {
                   url={url}
                   isInstalling={isInstalling}
                 />
+              )} */}
+              {activeTab === "code" && (
+                <div className="absolute inset-0">
+                  <CodeEditor file={selectedFile} />
+                </div>
               )}
+              <PreviewFrame
+                webContainer={webcontainer}
+                url={url}
+                isInstalling={isInstalling}
+              />
             </div>
           </div>
           <Terminal />

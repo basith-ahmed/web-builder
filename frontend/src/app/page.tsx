@@ -1,6 +1,6 @@
 "use client";
 
-import { DotPattern } from "@/components/ui/Dots";
+import { GridPattern } from "@/components/ui/Dots";
 import { cn } from "@/lib/utils";
 import { Slash } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -34,8 +34,8 @@ export default function Home() {
         </h1>
       </header>
       <div className="h-full w-full p-2 pb-0 pt-0 flex items-center justify-center relative">
-        <DotPattern
-          glow={true}
+        <GridPattern
+          // glow={true}
           className={cn(
             "[mask-image:radial-gradient(600px_250px_at_center,white,transparent)]"
           )}
@@ -46,7 +46,7 @@ export default function Home() {
           </h1>
           <form
             onSubmit={handleSubmit}
-            className="bg-[#141414] w-[40rem] p-2 flex flex-col justify-between ring-1 ring-white/10 rounded-2xl z-20"
+            className="bg-[#141414] w-[40rem] p-2 flex flex-col justify-between ring-1 ring-[#272728] rounded-2xl z-20"
           >
             <textarea
               value={prompt}

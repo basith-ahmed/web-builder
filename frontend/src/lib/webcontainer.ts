@@ -1,6 +1,6 @@
-import { WebContainer } from '@webcontainer/api';
-import { FileSystemTree } from '@webcontainer/api';
-import { FileItem } from '@/types';
+import { WebContainer } from "@webcontainer/api";
+import { FileSystemTree } from "@webcontainer/api";
+import { FileItem } from "@/types";
 
 export async function bootWebContainer(): Promise<WebContainer> {
   return await WebContainer.boot();
@@ -44,17 +44,22 @@ export function createMountStructure(files: FileItem[]): FileSystemTree {
   return mountStructure;
 }
 
-export async function installDependencies(webContainer: WebContainer, onLog: (message: string) => void): Promise<void> {
+export async function installDependencies(
+  webContainer: WebContainer,
+  onLog: (message: string) => void
+): Promise<void> {
   onLog("Installing dependencies...");
   onLog("Running: npm install");
-  
+
   const installProcess = await webContainer.spawn("npm", ["install"]);
-  
+
   installProcess.output.pipeTo(
     new WritableStream({
       write(data) {
-        const logMessage = typeof data === "string" ? data : new TextDecoder().decode(data);
-        onLog(formatLog(logMessage));
+        const logMessage =
+          typeof data === "string" ? data : new TextDecoder().decode(data);
+        const cleaned = formatLog(logMessage);
+        if (cleaned) onLog(cleaned);
       },
     })
   );
@@ -62,20 +67,17 @@ export async function installDependencies(webContainer: WebContainer, onLog: (me
   await installProcess.exit;
 }
 
-export async function startDevServer(webContainer: WebContainer, onLog: (message: string) => void): Promise<void> {
+export async function startDevServer(
+  webContainer: WebContainer,
+  onLog: (message: string) => void
+): Promise<void> {
   onLog("Starting development server...");
   onLog("Running: npm run dev");
   await webContainer.spawn("npm", ["run", "dev"]);
 }
 
 export function formatLog(data: string): string {
-  let cleaned = data.replace(/\x1B\[[0-9;]*[a-zA-Z]/g, '');
-  cleaned = cleaned.replace(/\\/g, '').trim();
-  if (cleaned) {
-    const now = new Date();
-    const pad = (n: number) => n.toString().padStart(2, '0');
-    const time = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
-    return `${time} ${cleaned}`;
-  }
-  return '';
-} 
+  let cleaned = data.replace(/\x1B\[[0-9;]*[a-zA-Z]/g, "");
+  cleaned = cleaned.replace(/\\/g, "").trim();
+  return cleaned ? cleaned : "";
+}

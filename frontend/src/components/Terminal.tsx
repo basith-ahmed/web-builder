@@ -50,27 +50,31 @@ export function Terminal() {
           </span>
         </div>
       </div>
-      {!isCollapsed && (
-        <div className="w-full p-4 text-sm bg-black text-white/80 font-mono h-64 overflow-y-auto">
-          {logs.map((log, index) => (
-            <div
-              key={index}
-              className={`mb-1 whitespace-pre-wrap break-all ${
-                log.includes("error") || log.includes("Error")
-                  ? "text-red-400"
-                  : log.includes("warning") || log.includes("Warning")
-                  ? "text-yellow-400"
-                  : log.includes("success") || log.includes("Success")
-                  ? "text-green-400"
-                  : ""
-              }`}
-            >
-              {log}
-            </div>
-          ))}
-          <div ref={logsEndRef} />
-        </div>
-      )}
+      {/* {!isCollapsed && ( */}
+      <div
+        className={`w-full text-sm bg-black text-white/80 font-mono overflow-y-auto  transition-all duration-300 ${
+          isCollapsed ? "h-0" : "h-64"
+        }`}
+      >
+        {logs.map((log, index) => (
+          <div
+            key={index}
+            className={`px-4 mb-1 whitespace-pre-wrap break-all ${
+              log.includes("error") || log.includes("Error")
+                ? "text-red-400"
+                : log.includes("warning") || log.includes("Warning")
+                ? "text-yellow-400"
+                : log.includes("success") || log.includes("Success")
+                ? "text-green-400"
+                : ""
+            }`}
+          >
+            {log}
+          </div>
+        ))}
+        <div ref={logsEndRef} />
+      </div>
+      {/* )} */}
     </div>
   );
 }

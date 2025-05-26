@@ -40,7 +40,9 @@ export function StepsList({ steps }: StepsListProps) {
               ) : (
                 <Circle className="w-5 h-5 text-gray-600" />
               )}
-              <h3 className="font-medium text-gray-100">{step.title}</h3>
+              <h3 className="font-medium text-gray-100 max-w-60">
+                {step.title}
+              </h3>
             </div>
             <p className="text-sm text-gray-400 mt-2">{step.description}</p>
           </div>

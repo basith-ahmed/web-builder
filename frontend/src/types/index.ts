@@ -1,3 +1,13 @@
+export interface JsonResponse {
+  title: string;
+  description: string;
+  steps: {
+    type: "file" | "shell";
+    path?: string;
+    content?: string;
+  }[];
+}
+
 export enum StepType {
   CreateFile,
   CreateFolder,

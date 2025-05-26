@@ -23,7 +23,8 @@ import { TerminalProvider, useTerminal } from "@/context/TerminalContext";
 import { useFileSystem } from "@/hooks/useFileSystem";
 import { cn } from "@/lib/utils";
 import { installDependencies, startDevServer } from "@/lib/webcontainer";
-import { Slash } from "lucide-react";
+import { Slash, Download } from "lucide-react";
+import JSZip from "jszip";
 
 function BuilderContent() {
   const searchParams = useSearchParams();
@@ -268,10 +269,41 @@ function BuilderContent() {
     ]);
   };
 
+  const handleDownload = () => {
+    // Create a zip file containing all project files
+    const zip = new JSZip();
+
+    const addFilesToZip = (items: FileItem[], path = '') => {
+      items.forEach(item => {
+        const currentPath = path ? `${path}/${item.name}` : item.name;
+        
+        if (item.type === 'file') {
+          zip.file(currentPath, item.content || '');
+        } else if (item.type === 'folder' && item.children) {
+          addFilesToZip(item.children, currentPath);
+        }
+      });
+    };
+
+    addFilesToZip(files);
+
+    // Generate and download the zip file
+    zip.generateAsync({ type: 'blob' })
+      .then(content => {
+        const url = window.URL.createObjectURL(content);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'project.zip';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      });
+  };
+
   return (
     <div className="h-screen flex flex-col  bg-[#0f0f10]">
       <header className="flex justify-between items-center border-white/10 px-4 py-1.5">
-        {/* <div className="w-[2px] rounded-full bg-white/20 mx-2"></div> */}
         <p className="mt-1 truncate max-w-96 text-md flex items-center">
           <span className="font-semibold">Builder</span>
           <Slash className="w-4 h-4 -rotate-20 mx-[2px] font-semibold text-white/50" />
@@ -353,7 +385,7 @@ function BuilderContent() {
           <TabView
             activeTab={activeTab}
             onTabChange={setActiveTab}
-            selectedFile={selectedFile}
+            handleDownload={handleDownload}
           />
           <div className="h-full grid grid-cols-4 overflow-hidden border-t border-white/10">
             <div className="col-span-1 overflow-auto border-r border-white/10">
@@ -370,16 +402,16 @@ function BuilderContent() {
                   isInstalling={isInstalling}
                 />
               )} */}
-              {activeTab === "code" && (
-                <div className="absolute inset-0">
-                  <CodeEditor file={selectedFile} />
-                </div>
-              )}
               <PreviewFrame
                 webContainer={webcontainer}
                 url={url}
                 isInstalling={isInstalling}
               />
+              {activeTab === "code" && (
+                <div className="absolute inset-0 z-20 bg-[#0f0f10]">
+                  <CodeEditor file={selectedFile} />
+                </div>
+              )}
             </div>
           </div>
           <Terminal />

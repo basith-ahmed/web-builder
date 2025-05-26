@@ -1,16 +1,16 @@
 import React from "react";
-import { Code2, Eye, ScreenShare } from "lucide-react";
+import { Code2, Download, Eye, ScreenShare } from "lucide-react";
 import { FileItem } from "@/types";
 interface TabViewProps {
   activeTab: "code" | "preview";
   onTabChange: (tab: "code" | "preview") => void;
-  selectedFile: FileItem | null;
+  handleDownload: () => void;
 }
 
 export function TabView({
   activeTab,
   onTabChange,
-  selectedFile,
+  handleDownload,
 }: TabViewProps) {
   return (
     <div className="flex items-center justify-between p-2">
@@ -38,13 +38,13 @@ export function TabView({
           Preview
         </button>
       </div>
-      {selectedFile && activeTab === "code" && (
-        <span className="text-md text-white flex items-center space-x-1 pr-4">
-          {/* <File size={14} /> */}
-          <Eye className="w-4 h-4" />
-          <p>{selectedFile.name}</p>
-        </span>
-      )}
+      <button
+        onClick={handleDownload}
+        className="flex items-center gap-2 px-3 rounded-md bg-white/10 hover:bg-white/20 transition-colors h-8 cursor-pointer"
+      >
+        <Download className="w-4 h-4" />
+        <span>Download</span>
+      </button>
     </div>
   );
 }

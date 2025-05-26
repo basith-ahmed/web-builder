@@ -15,7 +15,7 @@ import { PreviewFrame } from "@/components/PreviewFrame";
 import { Step, FileItem, StepType } from "@/types";
 import axios from "axios";
 import { BACKEND_URL } from "@/utils/config";
-import { parseXml } from "@/utils/parser";
+import { parseJson } from "@/utils/parser";
 import { useWebContainer } from "@/hooks/useWebContainer";
 import { useSearchParams } from "next/navigation";
 import { Terminal } from "@/components/Terminal";
@@ -194,7 +194,7 @@ function BuilderContent() {
     const { base, defaultFiles } = response.data;
 
     setSteps(
-      parseXml(defaultFiles[0]).map((x: Step) => ({
+      parseJson(defaultFiles[0]).map((x: Step) => ({
         ...x,
         status: "pending",
       }))
@@ -213,7 +213,7 @@ function BuilderContent() {
 
     setSteps((s) => [
       ...s,
-      ...parseXml(stepsResponse.data.response).map((x) => ({
+      ...parseJson(stepsResponse.data.response).map((x) => ({
         ...x,
         status: "pending" as const,
       })),
@@ -261,7 +261,7 @@ function BuilderContent() {
 
     setSteps((s) => [
       ...s,
-      ...parseXml(stepsResponse.data.response).map((x) => ({
+      ...parseJson(stepsResponse.data.response).map((x) => ({
         ...x,
         status: "pending" as const,
       })),

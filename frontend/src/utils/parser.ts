@@ -13,7 +13,7 @@ export function parseJson(response: string): Step[] {
       title: jsonResponse.title,
       description: jsonResponse.description,
       type: StepType.CreateFolder,
-      status: "pending",
+      status: "pending"
     });
 
     // The we process each step
@@ -21,7 +21,7 @@ export function parseJson(response: string): Step[] {
       if (step.type === "file") {
         steps.push({
           id: stepId++,
-          title: `Create ${step.path || "file"}`,
+          title: `${step.process || "Creating"} ${(step.path?.split("/")?.at(-1)) || "file"}`,
           description: "",
           type: StepType.CreateFile,
           status: "pending",
@@ -31,7 +31,7 @@ export function parseJson(response: string): Step[] {
       } else if (step.type === "shell") {
         steps.push({
           id: stepId++,
-          title: "Run command",
+          title: `${step.content}`,
           description: "",
           type: StepType.RunScript,
           status: "pending",

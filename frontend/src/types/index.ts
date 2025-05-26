@@ -5,6 +5,7 @@ export interface JsonResponse {
     type: "file" | "shell";
     path?: string;
     content?: string;
+    process?: "Creating" | "Modifying";
   }[];
 }
 
@@ -34,9 +35,9 @@ export interface Project {
 export interface FileItem {
   name: string;
   type: "file" | "folder";
-  children?: FileItem[];
+  path?: string;
   content?: string;
-  path: string;
+  children?: FileItem[];
 }
 
 export interface FileViewerProps {

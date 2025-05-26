@@ -78,7 +78,7 @@ function BuilderContent() {
     if (!webcontainer) return;
 
     webcontainer.on("server-ready", (port: number, url: string) => {
-      console.log({ url, port });
+      // console.log({ url, port });
       setUrl(url);
     });
   }, [webcontainer]);
@@ -183,7 +183,7 @@ function BuilderContent() {
         })
       );
     }
-    console.log(files);
+    // console.log(files);
   }, [steps, files]);
 
   // Fetching the template files on mounting
@@ -209,7 +209,7 @@ function BuilderContent() {
       })),
     });
 
-    console.log({ response: stepsResponse.data.response });
+    // console.log({ response: stepsResponse.data.response });
     setLoading(false);
 
     setSteps((s) => [
@@ -329,7 +329,7 @@ function BuilderContent() {
           >
             <span
               className={cn(
-                "absolute inset-0 block h-full w-full animate-gradient rounded-[inherit] bg-gradient-to-r from-white/30 via-white/60 to-white/30 bg-[length:300%_100%] p-[1.5px] transition-all duration-500",
+                "absolute inset-0 block h-full w-full animate-gradient rounded-[inherit] bg-gradient-to-r from-white/30 via-white/60 to-white/30 bg-[length:300%_100%] p-[2px] transition-all duration-500",
                 {
                   "opacity-100": loading,
                   "opacity-0": !loading,

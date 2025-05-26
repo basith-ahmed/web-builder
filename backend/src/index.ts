@@ -34,7 +34,7 @@ app.post("/template", async (req, res) => {
         BASE_PROMPT,
         `Project Files:\n\nThe following is a list of all project files and their complete contents that are currently visible and accessible to you. ${REACT} \nHere is a list of files that exist on the file system but are not being shown to you:\n\n  - .gitignore\n  - package-lock.json\n.`,
       ],
-      defaultFiles: [REACT],
+      defaultFiles: [JSON.stringify({ ...REACT, description: prompt })],
     });
     return;
   }
@@ -44,7 +44,7 @@ app.post("/template", async (req, res) => {
       base: [
         `Project Files:\n\nThe following is a list of all project files and their complete contents that are currently visible and accessible to you. ${NODE} \nHere is a list of files that exist on the file system but are not being shown to you:\n\n  - .gitignore\n  - package-lock.json\n.`,
       ],
-      defaultFiles: [NODE],
+      defaultFiles: [JSON.stringify({ ...NODE, description: prompt })],
     });
     return;
   }

@@ -27,26 +27,32 @@ function FileNode({ item, depth, onFileClick }: FileNodeProps) {
   return (
     <div className="select-none">
       <div
-        className="flex items-center  hover:bg-white/20 rounded-md cursor-pointer text-white/80 transition-colors duration-200 p-1"
-        style={{ paddingLeft: `${depth * 1.2}rem` }}
+        className="flex items-center gap-2 hover:bg-white/10 rounded-md cursor-pointer text-white/80 transition-all duration-200 py-1.5 px-2 group"
+        style={{ paddingLeft: `${depth * 1 + 0.5}rem` }}
         onClick={handleClick}
       >
-        {item.type === 'folder' && (
-          <span className="text-white/50">
-            {isExpanded
-              ? <ChevronDown className="w-4 h-4" />
-              : <ChevronRight className="w-4 h-4" />}
+        {item.type === "folder" && (
+          <span className="text-white/50 group-hover:text-white/70 transition-colors">
+            {isExpanded ? (
+              <ChevronDown className="w-4 h-4" />
+            ) : (
+              <ChevronRight className="w-4 h-4" />
+            )}
           </span>
         )}
-        {item.type === 'folder' ? (
-          <FolderTree className="w-4 h-4" />
-        ) : (
-          <File className="w-4 h-4" />
-        )}
-        <span className="text-white/90">{item.name}</span>
+        <span className="text-[#bdbdbd] group-hover:text-white/70 transition-colors">
+          {item.type === "folder" ? (
+            <FolderTree className="w-4 h-4" />
+          ) : (
+            <File className="w-4 h-4" />
+          )}
+        </span>
+        <span className="text-white/90 group-hover:text-white transition-colors">
+          {item.name}
+        </span>
       </div>
-      {item.type === 'folder' && isExpanded && item.children && (
-        <div>
+      {item.type === "folder" && isExpanded && item.children && (
+        <div className="border-l border-white/10 ml-2">
           {item.children.map((child, index) => (
             <FileNode
               key={`${child.path}-${index}`}
@@ -64,11 +70,11 @@ function FileNode({ item, depth, onFileClick }: FileNodeProps) {
 export function FileExplorer({ files, onFileSelect }: FileExplorerProps) {
   return (
     <div className="rounded-lg p-4 h-full overflow-auto bg-[#0a0a0a]">
-      {/* <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-gray-100">
+      {/* <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-white/90 px-2">
         <FolderTree className="w-5 h-5" />
         File Explorer
       </h2> */}
-      <div className="space-y-1">
+      <div className="space-y-0.5">
         {files.slice().reverse().map((file, index) => (
           <FileNode
             key={`${file.path}-${index}`}

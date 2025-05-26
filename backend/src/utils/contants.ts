@@ -2,9 +2,9 @@ export const WORK_DIR_NAME = "project";
 export const WORK_DIR = `/home/${WORK_DIR_NAME}`;
 export const MODIFICATIONS_TAG_NAME = "webbuilder_file_modifications";
 
-export const REACT = JSON.stringify({
-  title: "Project Files",
-  description: "sending default files...",
+export const REACT = {
+  title: "Setting the template files...",
+  description: "",
   steps: [
     {
       type: "file",
@@ -19,7 +19,7 @@ export default tseslint.config(
   { ignores: ['dist'] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
-    files: ['**/*.{ts,tsx}'],
+    files: ['**/*.{js,jsx}'],
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
@@ -51,7 +51,7 @@ export default tseslint.config(
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>`
     },
@@ -195,7 +195,7 @@ export default defineConfig({
     },
     {
       type: "file",
-      path: "src/App.tsx",
+      path: "src/App.jsx",
       content: `import React from 'react';
 
 function App() {
@@ -217,10 +217,10 @@ export default App;`
     },
     {
       type: "file",
-      path: "src/main.tsx",
+      path: "src/main.jsx",
       content: `import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import App from './App.tsx';
+import App from './App.jsx';
 import './index.css';
 
 createRoot(document.getElementById('root')!).render(
@@ -235,18 +235,18 @@ createRoot(document.getElementById('root')!).render(
       content: `/// <reference types="vite/client" />`
     }
   ]
-});
+};
 
-export const NODE = JSON.stringify({
-  title: "Project Files",
-  description: "Sending default files...",
+export const NODE = {
+  title: "Setting the template files...",
+  description: "",
   steps: [
     {
       type: "file",
       path: "index.js",
       content: `// run \`node index.js\` in the terminal
 
-console.log(\`Hello Node.js v\${process.versions.node}!\`);`
+console.log(\`Hello Node.js v\${process.versions.node}!\`);`,
     },
     {
       type: "file",
@@ -257,7 +257,7 @@ console.log(\`Hello Node.js v\${process.versions.node}!\`);`
   "scripts": {
     "test": "echo \\"Error: no test specified\\" && exit 1"
   }
-}`
-    }
-  ]
-});
+}`,
+    },
+  ],
+};

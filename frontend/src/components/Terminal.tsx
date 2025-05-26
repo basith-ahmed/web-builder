@@ -72,7 +72,7 @@ export function Terminal() {
             {log}
           </div>
         ))}
-        <div ref={logsEndRef} />
+        <div ref={logsEndRef} className="pb-2" />
       </div>
       {/* )} */}
     </div>
